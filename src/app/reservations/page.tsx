@@ -1,11 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import Calendar from "@/components/Calendar";
 
 export default function ReservationsPage() {
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [isCalendarOpen, setCalendarOpen] = useState(false);
     return (
-        <main className="min-h-screen bg-[#F8F5EE] p-4 md:p-8 font-sans flex items-center justify-center">
-            <Link href="/" className="fixed top-6 left-6 md:top-12 md:left-12 text-sm font-bold uppercase tracking-wider hover:opacity-70 z-50">
-                &larr; Back
-            </Link>
+        <main className="min-h-screen bg-[#F8F5EE] p-4 md:p-8 font-sans flex items-center justify-center pt-20">
 
             <div className="w-full max-w-[1600px] bg-white rounded-[2rem] shadow-2xl shadow-neutral-200 overflow-hidden grid grid-cols-1 md:grid-cols-2 min-h-[700px]">
 
@@ -32,14 +35,33 @@ export default function ReservationsPage() {
                         </div>
 
                         {/* Date & Time */}
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-6 relative">
+                            <div className="space-y-3 relative group">
                                 <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Date</label>
-                                <input type="date" className="w-full border-b-2 border-neutral-100 py-2 font-serif text-xl focus:outline-none focus:border-[#EAB308] bg-transparent transition-colors" />
+                                <button
+                                    type="button"
+                                    onClick={() => setCalendarOpen(!isCalendarOpen)}
+                                    className="w-full text-left border-b-2 border-neutral-100 py-2 font-serif text-xl focus:outline-none border-b-[#EAB308] bg-transparent transition-colors"
+                                >
+                                    {selectedDate ? selectedDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : "Select Date"}
+                                </button>
+
+                                {isCalendarOpen && (
+                                    <div className="absolute top-full left-0 mt-4 z-50">
+                                        <Calendar
+                                            onSelect={(date) => {
+                                                setSelectedDate(date);
+                                                setCalendarOpen(false);
+                                            }}
+                                            selectedDate={selectedDate || new Date()}
+                                            onClose={() => setCalendarOpen(false)}
+                                        />
+                                    </div>
+                                )}
                             </div>
                             <div className="space-y-3">
                                 <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Time</label>
-                                <select className="w-full border-b-2 border-neutral-100 py-2 font-serif text-xl focus:outline-none focus:border-[#EAB308] bg-transparent transition-colors appearance-none">
+                                <select className="w-full border-b-2 border-neutral-100 py-2 font-serif text-xl focus:outline-none focus:border-[#EAB308] bg-transparent transition-colors appearance-none cursor-pointer">
                                     <option>19:00</option>
                                     <option>20:00</option>
                                     <option>21:00</option>

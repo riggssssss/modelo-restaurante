@@ -3,9 +3,6 @@ import Link from "next/link";
 export default function MenuPage() {
     return (
         <main className="min-h-screen bg-[#F8F5EE] font-sans">
-            <Link href="/" className="fixed top-6 left-6 md:top-12 md:left-12 text-sm font-bold uppercase tracking-wider hover:opacity-70 z-50 bg-white/50 backdrop-blur px-3 py-1 rounded-full">
-                &larr; Back
-            </Link>
 
             {/* Hero Header */}
             <div className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">

@@ -2,10 +2,7 @@ import Link from "next/link";
 
 export default function AboutPage() {
     return (
-        <main className="min-h-screen bg-[#F8F5EE] p-4 md:p-8 font-sans">
-            <Link href="/" className="fixed top-6 left-6 md:top-12 md:left-12 text-sm font-bold uppercase tracking-wider hover:opacity-70 z-50 mix-blend-difference text-black/50">
-                &larr; Back
-            </Link>
+        <main className="min-h-screen bg-[#F8F5EE] p-4 md:p-8 font-sans pt-20">
 
             <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[calc(100vh-4rem)]">
                 {/* Left: Text */}
