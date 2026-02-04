@@ -18,9 +18,9 @@ export default function Home() {
           <header className="flex justify-between items-center w-full">
             <div className="text-xl font-bold tracking-tight">KEKO.</div>
             <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
-              <a href="#" className="hover:opacity-100">About</a>
-              <a href="#" className="hover:opacity-100">Menu</a>
-              <a href="#" className="hover:opacity-100">Bookings</a>
+              <a href="/about" className="hover:opacity-100">About</a>
+              <a href="/menu" className="hover:opacity-100">Menu</a>
+              <a href="/reservations" className="hover:opacity-100">Bookings</a>
             </nav>
             <div className="md:hidden">
               {/* Mobile Menu Icon Placeholder */}
@@ -50,12 +50,12 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <button className="px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all">
+              <a href="/reservations" className="px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all text-center">
                 Reserve Table
-              </button>
-              <button className="px-8 py-4 border border-black rounded-full font-medium hover:bg-black/5 transition-all">
+              </a>
+              <a href="/menu" className="px-8 py-4 border border-black rounded-full font-medium hover:bg-black/5 transition-all text-center">
                 View Menu
-              </button>
+              </a>
             </div>
           </div>
 
