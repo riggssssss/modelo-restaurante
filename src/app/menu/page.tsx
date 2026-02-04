@@ -2,70 +2,102 @@ import Link from "next/link";
 
 export default function MenuPage() {
     return (
-        <main className="min-h-screen bg-[#F8F5EE] p-6 md:p-12 font-sans">
-            <Link href="/" className="fixed top-6 left-6 md:top-12 md:left-12 text-sm font-bold uppercase tracking-wider hover:opacity-70 z-50">
-                &larr; Back to Home
+        <main className="min-h-screen bg-[#F8F5EE] font-sans">
+            <Link href="/" className="fixed top-6 left-6 md:top-12 md:left-12 text-sm font-bold uppercase tracking-wider hover:opacity-70 z-50 bg-white/50 backdrop-blur px-3 py-1 rounded-full">
+                &larr; Back
             </Link>
 
-            <div className="max-w-4xl mx-auto pt-20">
-                <header className="text-center mb-24">
-                    <span className="inline-block bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">
+            {/* Hero Header */}
+            <div className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-neutral-900">
+                    <div className="w-full h-full opacity-60 bg-[url('https://images.unsplash.com/photo-1544025162-d7669d26d391?q=80&w=2600&auto=format&fit=crop')] bg-cover bg-center"></div>
+                </div>
+                <div className="relative z-10 text-center text-white p-4">
+                    <span className="inline-block border border-white/30 bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
                         Seasonal Menu &bull; Winter 2026
                     </span>
-                    <h1 className="text-6xl md:text-8xl font-serif leading-none tracking-tight mb-8">
-                        Taste the <br /><span className="italic text-neutral-400">extraordinary.</span>
+                    <h1 className="text-6xl md:text-9xl font-serif leading-none tracking-tight">
+                        The Menu
                     </h1>
-                    <p className="max-w-md mx-auto text-lg text-neutral-600">
-                        Our menu changes daily based on market availability.
-                        Below is a sample of our current offerings.
-                    </p>
-                </header>
+                </div>
+            </div>
 
-                <section className="space-y-24">
+            <div className="max-w-5xl mx-auto px-6 md:px-12 py-24">
+
+                {/* Intro */}
+                <p className="max-w-xl mx-auto text-xl text-center text-neutral-600 mb-24 font-serif italic">
+                    &quot;Our menu changes daily based on what the earth provides. We work closely with local farmers to bring the best of Madrid to your plate.&quot;
+                </p>
+
+                <section className="space-y-32">
                     {/* Starters */}
-                    <div>
-                        <h2 className="text-3xl font-serif border-b border-black/10 pb-6 mb-12">Starters</h2>
-                        <div className="space-y-12">
-                            {[
-                                { name: "Burrata & Heritage Tomato", price: "18", desc: "Basil oil, pine nuts, balsamic glaze" },
-                                { name: "Scallop Carpaccio", price: "24", desc: "Yuzu dressing, radish, coriander cress" },
-                                { name: "Beef Tartare", price: "22", desc: "Smoked egg yolk, capers, sourdough crisp" }
-                            ].map((item, i) => (
-                                <div key={i} className="group flex justify-between items-baseline hover:opacity-70 transition-opacity cursor-default">
-                                    <div>
-                                        <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
+                    <div className="grid md:grid-cols-[1fr_300px] gap-12 items-start">
+                        <div>
+                            <h2 className="text-4xl font-serif mb-12 flex items-center gap-4">
+                                Starters
+                                <span className="h-px bg-black/10 flex-grow"></span>
+                            </h2>
+                            <div className="space-y-12">
+                                {[
+                                    { name: "Burrata & Heritage Tomato", price: "18", desc: "Basil oil, pine nuts, balsamic glaze" },
+                                    { name: "Scallop Carpaccio", price: "24", desc: "Yuzu dressing, radish, coriander cress" },
+                                    { name: "Beef Tartare", price: "22", desc: "Smoked egg yolk, capers, sourdough crisp" }
+                                ].map((item, i) => (
+                                    <div key={i} className="group relative pl-4 border-l-2 border-transparent hover:border-[#EAB308] transition-all cursor-default">
+                                        <div className="flex justify-between items-baseline mb-2">
+                                            <h3 className="text-2xl font-bold">{item.name}</h3>
+                                            <span className="text-xl font-mono text-neutral-400">{item.price}</span>
+                                        </div>
                                         <p className="text-neutral-500">{item.desc}</p>
                                     </div>
-                                    <span className="text-xl font-mono">{item.price}</span>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                        </div>
+                        <div className="hidden md:block sticky top-24">
+                            <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-200">
+                                <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1626804475297-411db7044238?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center"></div>
+                            </div>
+                            <p className="text-xs text-center mt-3 text-neutral-400 uppercase tracking-widest">Plated by Chef Garcia</p>
                         </div>
                     </div>
 
                     {/* Mains */}
-                    <div>
-                        <h2 className="text-3xl font-serif border-b border-black/10 pb-6 mb-12">Mains</h2>
-                        <div className="space-y-12">
-                            {[
-                                { name: "Wild Mushroom Risotto", price: "28", desc: "Truffle oil, parmesan crisp, thyme" },
-                                { name: "Pan-Seared Seabass", price: "34", desc: "Cauliflower purée, samphire, lemon butter" },
-                                { name: "Iberico Pork Presa", price: "38", desc: "Apple chutney, cider jus, charred leeks" },
-                                { name: "Roast Duck Breast", price: "36", desc: "Blackberry jus, celeriac fondant, kale" }
-                            ].map((item, i) => (
-                                <div key={i} className="group flex justify-between items-baseline hover:opacity-70 transition-opacity cursor-default">
-                                    <div>
-                                        <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
+                    <div className="grid md:grid-cols-[300px_1fr] gap-12 items-start">
+                        <div className="hidden md:block sticky top-24 order-2 md:order-1">
+                            <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-200">
+                                <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1546241072-48010ad2862c?q=80&w=1974&auto=format&fit=crop')] bg-cover bg-center"></div>
+                            </div>
+                            <p className="text-xs text-center mt-3 text-neutral-400 uppercase tracking-widest">Locally Sourced</p>
+                        </div>
+
+                        <div className="order-1 md:order-2">
+                            <h2 className="text-4xl font-serif mb-12 flex items-center gap-4">
+                                <span className="h-px bg-black/10 flex-grow"></span>
+                                Mains
+                            </h2>
+                            <div className="space-y-12">
+                                {[
+                                    { name: "Wild Mushroom Risotto", price: "28", desc: "Truffle oil, parmesan crisp, thyme" },
+                                    { name: "Pan-Seared Seabass", price: "34", desc: "Cauliflower purée, samphire, lemon butter" },
+                                    { name: "Iberico Pork Presa", price: "38", desc: "Apple chutney, cider jus, charred leeks" },
+                                    { name: "Roast Duck Breast", price: "36", desc: "Blackberry jus, celeriac fondant, kale" }
+                                ].map((item, i) => (
+                                    <div key={i} className="group relative pl-4 border-l-2 border-transparent hover:border-[#EAB308] transition-all cursor-default">
+                                        <div className="flex justify-between items-baseline mb-2">
+                                            <h3 className="text-2xl font-bold">{item.name}</h3>
+                                            <span className="text-xl font-mono text-neutral-400">{item.price}</span>
+                                        </div>
                                         <p className="text-neutral-500">{item.desc}</p>
                                     </div>
-                                    <span className="text-xl font-mono">{item.price}</span>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <div className="mt-32 text-center pb-20">
-                    <Link href="/reservations" className="px-10 py-5 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all inline-block">
+                <div className="mt-32 text-center pb-20 border-t border-black/5 pt-20">
+                    <h3 className="text-3xl font-serif mb-8">Ready to taste?</h3>
+                    <Link href="/reservations" className="px-10 py-5 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all inline-block shadow-xl hover:shadow-2xl hover:-translate-y-1">
                         Book a Table
                     </Link>
                 </div>
