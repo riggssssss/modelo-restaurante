@@ -29,10 +29,23 @@ export default function AboutPage() {
                     </div>
                 </div>
 
-                {/* Right: Image */}
-                <div className="relative h-[50vh] md:h-auto rounded-[2rem] overflow-hidden order-1 md:order-2">
-                    <div className="absolute inset-0 bg-neutral-300">
-                        <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+                {/* Right: Visuals */}
+                <div className="flex flex-col gap-6 order-1 md:order-2 h-full">
+                    <div className="relative flex-grow min-h-[40vh] rounded-[2rem] overflow-hidden">
+                        {/* Main Atmosphere Image */}
+                        <div className="absolute inset-0 bg-neutral-300">
+                            <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+                        </div>
+                    </div>
+
+                    <div className="relative h-64 md:h-80 rounded-[2rem] overflow-hidden group">
+                        {/* Secondary Detail Image (Kitchen/Plating) */}
+                        <div className="absolute inset-0 bg-neutral-800">
+                            <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974&auto=format&fit=crop')] bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        </div>
+                        <div className="absolute bottom-6 left-6 text-white max-w-[200px]">
+                            <p className="font-serif italic text-lg leading-tight">&quot;Every dish tells a story of its origin.&quot;</p>
+                        </div>
                     </div>
                 </div>
             </div>

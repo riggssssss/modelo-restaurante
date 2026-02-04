@@ -90,6 +90,38 @@ export default function MenuPage() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Desserts */}
+                    <div className="grid md:grid-cols-[1fr_300px] gap-12 items-start">
+                        <div>
+                            <h2 className="text-4xl font-serif mb-12 flex items-center gap-4">
+                                Desserts
+                                <span className="h-px bg-black/10 flex-grow"></span>
+                            </h2>
+                            <div className="space-y-12">
+                                {[
+                                    { name: "Dark Chocolate Tart", price: "12", desc: "Sea salt, crème fraîche, honeycomb" },
+                                    { name: "Basque Burnt Cheesecake", price: "14", desc: "Fig jam, walnut crumble" },
+                                    { name: "Poached Pear", price: "12", desc: "Saffron syrup, vanilla bean ice cream" }
+                                ].map((item, i) => (
+                                    <div key={i} className="group relative pl-4 border-l-2 border-transparent hover:border-[#EAB308] transition-all cursor-default">
+                                        <div className="flex justify-between items-baseline mb-2">
+                                            <h3 className="text-2xl font-bold">{item.name}</h3>
+                                            <span className="text-xl font-mono text-neutral-400">{item.price}</span>
+                                        </div>
+                                        <p className="text-neutral-500">{item.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="hidden md:block sticky top-24">
+                            <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-200">
+                                <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1511914678378-2906b1f69dcf?q=80&w=1974&auto=format&fit=crop')] bg-cover bg-center"></div>
+                            </div>
+                            <p className="text-xs text-center mt-3 text-neutral-400 uppercase tracking-widest">Sweet Ending</p>
+                        </div>
+                    </div>
+
                 </section>
 
                 <div className="mt-32 text-center pb-20 border-t border-black/5 pt-20">

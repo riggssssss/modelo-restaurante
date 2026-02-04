@@ -29,6 +29,61 @@
       transform: translateY(0);
     }
   }
+
+  /* Animations */
+  --animate-curtain-cover: curtainCover 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  --animate-curtain-reveal: curtainReveal 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+
+  --animate-content-exit: parallaxExit 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  --animate-content-enter: parallaxEnter 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+
+  @keyframes curtainCover {
+    0% {
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+
+    100% {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+
+  @keyframes curtainReveal {
+    0% {
+      transform: scaleX(1);
+      transform-origin: right;
+    }
+
+    100% {
+      transform: scaleX(0);
+      transform-origin: right;
+    }
+  }
+
+  @keyframes parallaxExit {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateX(100px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes parallaxEnter {
+    0% {
+      transform: translateX(-100px);
+      opacity: 0;
+    }
+
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
 }
 
 body {

@@ -1,17 +1,18 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTransition } from "@/context/TransitionProvider";
 
 export default function ArrowNavigation() {
     const pathname = usePathname();
+    const { navigate } = useTransition();
 
     // Define the linear flow
     const flow = [
         { path: "/", name: "Home" },
         { path: "/about", name: "Story" },
         { path: "/menu", name: "Menu" },
-        { path: "/reservations", name: "Book" },
+        { path: "/reservations", name: "Bookings" },
     ];
 
     const currentIndex = flow.findIndex((item) => item.path === pathname);
@@ -20,39 +21,57 @@ export default function ArrowNavigation() {
 
     return (
         <>
-            <div className="fixed bottom-8 left-0 right-0 z-50 flex justify-between px-8 md:px-12 pointer-events-none">
+            <div className="fixed inset-0 z-50 pointer-events-none flex justify-between">
 
-                {/* Previous Arrow */}
-                <div className="pointer-events-auto">
+                {/* Left Zone (Previous) */}
+                <div className="pointer-events-auto h-full">
                     {prev && (
-                        <Link
-                            href={prev.path}
-                            className="group flex items-center gap-3 transition-all opacity-50 hover:opacity-100 hover:-translate-x-2"
+                        <button
+                            onClick={() => navigate(prev.path)}
+                            className="group relative h-full w-24 md:w-40 flex items-center justify-start overflow-hidden cursor-pointer bg-transparent border-none p-0 appearance-none"
                         >
-                            <div className="w-12 h-12 rounded-full border border-black flex items-center justify-center bg-[#F8F5EE] group-hover:bg-black group-hover:text-white transition-colors">
-                                &larr;
+                            {/* Gradient Background - Smoother Transition */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]" />
+
+                            {/* Vertical Text Label */}
+                            <div className="relative z-10 w-full flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-700 delay-75 transform -translate-x-4 group-hover:translate-x-0">
+                                <span
+                                    className="text-white font-sans text-xs font-bold uppercase tracking-[0.3em] whitespace-nowrap opacity-90"
+                                    style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}
+                                >
+                                    {prev.name}
+                                </span>
+                                <span className="text-white/50 text-[10px] absolute top-1/2 left-8 -translate-y-1/2 -rotate-90 tracking-widest translate-x-1">
+                                    PREV
+                                </span>
                             </div>
-                            <span className="hidden md:block font-serif text-sm uppercase tracking-widest font-bold">
-                                {prev.name}
-                            </span>
-                        </Link>
+                        </button>
                     )}
                 </div>
 
-                {/* Next Arrow */}
-                <div className="pointer-events-auto">
+                {/* Right Zone (Next) */}
+                <div className="pointer-events-auto h-full">
                     {next && (
-                        <Link
-                            href={next.path}
-                            className="group flex flex-row-reverse items-center gap-3 transition-all opacity-50 hover:opacity-100 hover:translate-x-2"
+                        <button
+                            onClick={() => navigate(next.path)}
+                            className="group relative h-full w-24 md:w-40 flex items-center justify-end overflow-hidden cursor-pointer bg-transparent border-none p-0 appearance-none"
                         >
-                            <div className="w-12 h-12 rounded-full border border-black flex items-center justify-center bg-[#F8F5EE] group-hover:bg-black group-hover:text-white transition-colors">
-                                &rarr;
+                            {/* Gradient Background - Smoother Transition */}
+                            <div className="absolute inset-0 bg-gradient-to-l from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)]" />
+
+                            {/* Vertical Text Label */}
+                            <div className="relative z-10 w-full flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-700 delay-75 transform translate-x-4 group-hover:translate-x-0">
+                                <span className="text-white/50 text-[10px] absolute top-1/2 right-8 -translate-y-1/2 -rotate-90 tracking-widest -translate-x-1">
+                                    NEXT
+                                </span>
+                                <span
+                                    className="text-white font-sans text-xs font-bold uppercase tracking-[0.3em] whitespace-nowrap opacity-90"
+                                    style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}
+                                >
+                                    {next.name}
+                                </span>
                             </div>
-                            <span className="hidden md:block font-serif text-sm uppercase tracking-widest font-bold">
-                                {next.name}
-                            </span>
-                        </Link>
+                        </button>
                     )}
                 </div>
 
