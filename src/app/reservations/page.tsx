@@ -20,6 +20,13 @@ export default function ReservationsPage() {
         phone: ""
     });
 
+    const stepImages = {
+        1: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070",
+        2: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=2074",
+        3: "https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=2070",
+        4: "https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=2070"
+    };
+
     const nextStep = () => setStep((prev) => prev + 1);
     const prevStep = () => setStep((prev) => prev - 1);
 
@@ -242,7 +249,18 @@ export default function ReservationsPage() {
                 {/* RIGHT COLUMN: Visuals */}
                 <div className="relative rounded-[2rem] overflow-hidden bg-neutral-200 hidden md:block">
                     <div className="absolute inset-0 bg-neutral-900">
-                        <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center grayscale-[20%] transition-all duration-1000 hover:scale-105" />
+                        <AnimatePresence mode="popLayout">
+                            <motion.div
+                                key={step}
+                                initial={{ opacity: 0, scale: 1.1 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.7 }}
+                                className="absolute inset-0 bg-cover bg-center"
+                                style={{ backgroundImage: `url(${stepImages[step as keyof typeof stepImages]})` }}
+                            />
+                        </AnimatePresence>
+                        <div className="absolute inset-0 bg-black/20" />
                     </div>
 
                     {/* Dynamic Quote based on step */}
