@@ -11,7 +11,6 @@ export default function ReservationsPage() {
     const [partySize, setPartySize] = useState<number | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string>("");
-    const [isCalendarOpen, setCalendarOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Form Data
@@ -34,10 +33,10 @@ export default function ReservationsPage() {
         <main className="min-h-screen p-4 md:p-8 flex items-center justify-center font-sans">
             <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
-            <div className="w-full max-w-[1600px] bg-transparent grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 h-[calc(100vh-4rem)] min-h-[700px]">
+            <div className="w-full max-w-[1600px] bg-transparent grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 h-[calc(100vh-4rem)] min-h-[750px]">
 
                 {/* LEFT COLUMN: Interactive Wizard */}
-                <div className="relative flex flex-col justify-between p-6 md:p-12 rounded-[2rem] bg-[#F8F5EE] overflow-hidden">
+                <div className="relative flex flex-col justify-between p-6 md:p-12 rounded-[2rem] bg-[#F8F5EE] overflow-hidden shadow-sm">
 
                     {/* Header */}
                     <header className="flex justify-between items-center w-full mb-8 z-20">
@@ -57,7 +56,7 @@ export default function ReservationsPage() {
 
                     {/* Progress Indicator */}
                     <div className="flex gap-2 mb-8 z-20">
-                        {[1, 2, 3].map((i) => (
+                        {[1, 2, 3, 4].map((i) => (
                             <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= step ? "bg-black" : "bg-neutral-200"}`} />
                         ))}
                     </div>
@@ -77,7 +76,7 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 1/3</div>
+                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 1/4</div>
                                     <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">How many guests?</h2>
 
                                     <div className="grid grid-cols-4 md:grid-cols-6 gap-3 mb-8">
@@ -96,7 +95,7 @@ export default function ReservationsPage() {
                                         <button
                                             disabled={!partySize}
                                             onClick={nextStep}
-                                            className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all"
+                                            className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95"
                                         >
                                             Next &rarr;
                                         </button>
@@ -104,7 +103,7 @@ export default function ReservationsPage() {
                                 </motion.div>
                             )}
 
-                            {/* STEP 2: DATE & TIME */}
+                            {/* STEP 2: DATE (Inline Calendar) */}
                             {step === 2 && (
                                 <motion.div
                                     key="step2"
@@ -115,54 +114,22 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 2/3</div>
-                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">When should we expect you?</h2>
+                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 2/4</div>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Select a date</h2>
 
-                                    <div className="space-y-6 mb-8">
-                                        <div className="relative">
-                                            <label className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2 block">Date</label>
-                                            <button
-                                                onClick={() => setCalendarOpen(!isCalendarOpen)}
-                                                className="w-full text-left text-2xl border-b border-neutral-200 py-3 focus:outline-none border-b-[#EAB308] bg-transparent"
-                                            >
-                                                {selectedDate ? selectedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : "Select a date"}
-                                            </button>
-                                            {isCalendarOpen && (
-                                                <div className="absolute top-full left-0 mt-4 z-50">
-                                                    <Calendar
-                                                        onSelect={(date) => {
-                                                            setSelectedDate(date);
-                                                            setCalendarOpen(false);
-                                                        }}
-                                                        selectedDate={selectedDate || new Date()}
-                                                        onClose={() => setCalendarOpen(false)}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <label className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2 block">Time</label>
-                                            <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
-                                                {["19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00"].map((time) => (
-                                                    <button
-                                                        key={time}
-                                                        onClick={() => setSelectedTime(time)}
-                                                        className={`px-6 py-3 rounded-xl border font-medium transition-all whitespace-nowrap ${selectedTime === time ? "bg-black text-white border-black" : "bg-white border-neutral-200 hover:border-black"}`}
-                                                    >
-                                                        {time}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
+                                    <div className="mb-8 flex justify-center">
+                                        <Calendar
+                                            onSelect={(date) => setSelectedDate(date)}
+                                            selectedDate={selectedDate || new Date()}
+                                        />
                                     </div>
 
                                     <div className="flex justify-between items-center">
                                         <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Go Back</button>
                                         <button
-                                            disabled={!selectedDate || !selectedTime}
+                                            disabled={!selectedDate}
                                             onClick={nextStep}
-                                            className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all"
+                                            className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95"
                                         >
                                             Next &rarr;
                                         </button>
@@ -170,7 +137,7 @@ export default function ReservationsPage() {
                                 </motion.div>
                             )}
 
-                            {/* STEP 3: DETAILS */}
+                            {/* STEP 3: TIME (Grid Selection) */}
                             {step === 3 && (
                                 <motion.div
                                     key="step3"
@@ -181,8 +148,47 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
+                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 3/4</div>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Pick a time</h2>
+
+                                    <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mb-8">
+                                        {["19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30"].map((time) => (
+                                            <button
+                                                key={time}
+                                                onClick={() => setSelectedTime(time)}
+                                                className={`py-6 rounded-2xl flex items-center justify-center text-xl font-medium transition-all duration-300 ${selectedTime === time ? "bg-black text-white shadow-lg scale-105" : "bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50"}`}
+                                            >
+                                                {time}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex justify-between items-center">
+                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Go Back</button>
+                                        <button
+                                            disabled={!selectedTime}
+                                            onClick={nextStep}
+                                            className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95"
+                                        >
+                                            Next &rarr;
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* STEP 4: DETAILS */}
+                            {step === 4 && (
+                                <motion.div
+                                    key="step4"
+                                    variants={variants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    transition={{ duration: 0.4, ease: "easeOut" }}
+                                    className="w-full"
+                                >
                                     <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Final Step</div>
-                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Almost there.</h2>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Complete your booking</h2>
 
                                     <div className="space-y-6 mb-8">
                                         <input
@@ -255,7 +261,8 @@ export default function ReservationsPage() {
                                 <p className="text-sm font-medium">
                                     {step === 1 && "\"The perfect evening starts with the right company.\""}
                                     {step === 2 && "\"We are ready when you are.\""}
-                                    {step === 3 && "\"Just one step away from an unforgettable night.\""}
+                                    {step === 3 && "\"Time is the only luxury.\""}
+                                    {step === 4 && "\"Just one step away from an unforgettable night.\""}
                                 </p>
                                 <div className="mt-2 text-xs opacity-70">&mdash; Keko Experience</div>
                             </motion.div>
