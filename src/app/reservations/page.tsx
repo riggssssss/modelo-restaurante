@@ -114,8 +114,6 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 2/4</div>
-
                                     <div className="mb-8 flex justify-center">
                                         <Calendar
                                             onSelect={(date) => setSelectedDate(date)}
