@@ -47,10 +47,10 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
                 <h2 className="text-4xl md:text-5xl font-serif leading-none shrink-0">Select a date</h2>
 
-                <div className="flex items-center gap-4 self-end md:self-auto">
-                    <h3 className="text-3xl md:text-5xl font-serif italic leading-none text-right whitespace-nowrap">
+                <div className="flex items-center gap-4 self-start md:self-auto">
+                    <h3 className="text-4xl md:text-5xl font-serif italic leading-none text-left whitespace-nowrap">
                         {currentMonth.toLocaleDateString('en-US', { month: 'long' })}
-                        <span className="text-xl md:text-3xl not-italic ml-2 opacity-60 font-sans tracking-tight">{currentMonth.getFullYear()}</span>
+                        <span className="text-2xl md:text-3xl not-italic ml-2 opacity-60 font-sans tracking-tight">{currentMonth.getFullYear()}</span>
                     </h3>
                     <div className="flex gap-1 shrink-0">
                         <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-black hover:bg-neutral-800 transition-all text-white">
