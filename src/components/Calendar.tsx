@@ -45,19 +45,19 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
     return (
         <div className="w-full">
             <div className="mb-8">
-                <div className="flex flex-wrap justify-between items-baseline gap-y-2">
-                    <h2 className="text-4xl md:text-5xl font-serif leading-tight">Select a date</h2>
-                    <h3 className="text-4xl md:text-5xl font-serif italic leading-tight text-right">
-                        {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                    </h3>
-                </div>
-                <div className="flex justify-end gap-2 mt-4">
+                <div className="flex justify-end gap-2 mb-4">
                     <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
                         &larr;
                     </button>
                     <button onClick={nextMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
                         &rarr;
                     </button>
+                </div>
+                <div className="flex flex-wrap justify-between items-baseline gap-y-2">
+                    <h2 className="text-4xl md:text-5xl font-serif leading-tight">Select a date</h2>
+                    <h3 className="text-4xl md:text-5xl font-serif italic leading-tight text-right">
+                        {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                    </h3>
                 </div>
             </div>
 
