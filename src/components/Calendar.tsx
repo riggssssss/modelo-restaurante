@@ -44,21 +44,20 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
 
     return (
         <div className="w-full">
-            <div className="flex flex-col md:flex-row md:items-baseline md:gap-4 mb-8">
-                <h2 className="text-4xl md:text-5xl font-serif leading-tight">Select a date</h2>
-
-                <div className="flex items-baseline gap-4">
-                    <h3 className="text-4xl md:text-5xl font-serif italic leading-tight whitespace-nowrap">
+            <div className="mb-8">
+                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                    <h2 className="text-4xl md:text-5xl font-serif leading-tight">Select a date</h2>
+                    <h3 className="text-4xl md:text-5xl font-serif italic leading-tight">
                         {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </h3>
-                    <div className="flex gap-2">
-                        <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
-                            &larr;
-                        </button>
-                        <button onClick={nextMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
-                            &rarr;
-                        </button>
-                    </div>
+                </div>
+                <div className="flex justify-end gap-2 mt-4">
+                    <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
+                        &larr;
+                    </button>
+                    <button onClick={nextMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
+                        &rarr;
+                    </button>
                 </div>
             </div>
 
