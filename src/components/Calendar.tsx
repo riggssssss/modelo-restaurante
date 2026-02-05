@@ -71,7 +71,7 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
                 ))}
             </div>
 
-            <div className="grid grid-cols-7 gap-3">
+            <div className="grid grid-cols-7 gap-1 md:gap-3">
                 {empties.map((_, i) => (
                     <div key={`empty-${i}`} />
                 ))}
@@ -80,7 +80,7 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
                         key={day}
                         onClick={() => handleDayClick(day)}
                         className={`
-                aspect-square flex items-center justify-center text-xl font-medium rounded-2xl transition-all duration-300
+                aspect-square flex items-center justify-center text-lg md:text-xl font-medium rounded-2xl transition-all duration-300
                 ${isSelected(day)
                                 ? "bg-black text-white shadow-lg scale-105"
                                 : "bg-white border border-neutral-100 text-neutral-600 hover:border-black/20 hover:bg-neutral-50"
