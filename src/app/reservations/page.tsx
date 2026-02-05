@@ -1,113 +1,265 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Calendar from "@/components/Calendar";
 import TransitionLink from "@/components/TransitionLink";
+import MobileMenu from "@/components/MobileMenu";
 
 export default function ReservationsPage() {
+    const [step, setStep] = useState(1);
+    const [partySize, setPartySize] = useState<number | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedTime, setSelectedTime] = useState<string>("");
     const [isCalendarOpen, setCalendarOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // Form Data
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: ""
+    });
+
+    const nextStep = () => setStep((prev) => prev + 1);
+    const prevStep = () => setStep((prev) => prev - 1);
+
+    const variants = {
+        enter: { opacity: 0, x: 20, filter: "blur(10px)" },
+        center: { opacity: 1, x: 0, filter: "blur(0px)" },
+        exit: { opacity: 0, x: -20, filter: "blur(10px)" }
+    };
+
     return (
-        <main className="min-h-screen bg-[#F8F5EE] p-4 md:p-8 font-sans flex items-center justify-center pt-20">
-            <TransitionLink href="/" className="fixed top-6 left-6 md:top-12 md:left-12 text-sm font-bold uppercase tracking-wider hover:opacity-70 z-50">
-                &larr; Back
-            </TransitionLink>
+        <main className="min-h-screen p-4 md:p-8 flex items-center justify-center font-sans">
+            <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
-            <div className="w-full max-w-[1600px] bg-white rounded-[2rem] shadow-2xl shadow-neutral-200 overflow-hidden grid grid-cols-1 md:grid-cols-2 min-h-[700px]">
+            <div className="w-full max-w-[1600px] bg-transparent grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 h-[calc(100vh-4rem)] min-h-[700px]">
 
-                {/* LEFT: Form Section */}
-                <div className="p-8 md:p-16 flex flex-col justify-center relative">
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#EAB308] mb-4">Reservations</span>
-                    <h1 className="text-4xl md:text-5xl font-serif mb-2">Secure your table.</h1>
-                    <p className="text-neutral-400 mb-10">Experience the unforgettable.</p>
+                {/* LEFT COLUMN: Interactive Wizard */}
+                <div className="relative flex flex-col justify-between p-6 md:p-12 rounded-[2rem] bg-[#F8F5EE] overflow-hidden">
 
-                    <form className="space-y-8">
-                        {/* Party Size Selector - Visual */}
-                        <div className="space-y-3">
-                            <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Party Size</label>
-                            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                                {[1, 2, 3, 4, 5, 6].map(num => (
-                                    <button key={num} type="button" className="w-12 h-12 rounded-full border border-neutral-200 flex items-center justify-center font-medium hover:bg-black hover:text-white hover:border-black transition-all focus:bg-black focus:text-white">
-                                        {num}
-                                    </button>
-                                ))}
-                                <button type="button" className="px-4 h-12 rounded-full border border-neutral-200 flex items-center justify-center font-medium hover:bg-black hover:text-white hover:border-black transition-all">
-                                    8+
-                                </button>
-                            </div>
+                    {/* Header */}
+                    <header className="flex justify-between items-center w-full mb-8 z-20">
+                        <TransitionLink href="/" className="text-xl font-bold tracking-tight">KEKO.</TransitionLink>
+                        <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
+                            <TransitionLink href="/about" className="hover:opacity-100">About</TransitionLink>
+                            <TransitionLink href="/menu" className="hover:opacity-100">Menu</TransitionLink>
+                            <TransitionLink href="/reservations" className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">Bookings</TransitionLink>
+                        </nav>
+                        <div className="md:hidden">
+                            <button onClick={() => setIsMobileMenuOpen(true)} className="space-y-1.5 cursor-pointer p-2">
+                                <div className="w-6 h-0.5 bg-black"></div>
+                                <div className="w-6 h-0.5 bg-black"></div>
+                            </button>
                         </div>
+                    </header>
 
-                        {/* Date & Time */}
-                        <div className="grid grid-cols-2 gap-6 relative">
-                            <div className="space-y-3 relative group">
-                                <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Date</label>
-                                <button
-                                    type="button"
-                                    onClick={() => setCalendarOpen(!isCalendarOpen)}
-                                    className="w-full text-left border-b-2 border-neutral-100 py-2 font-serif text-xl focus:outline-none border-b-[#EAB308] bg-transparent transition-colors"
+                    {/* Progress Indicator */}
+                    <div className="flex gap-2 mb-8 z-20">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className={`h-1 flex-1 rounded-full transition-all duration-500 ${i <= step ? "bg-black" : "bg-neutral-200"}`} />
+                        ))}
+                    </div>
+
+                    {/* Wizard Content */}
+                    <div className="flex-grow relative flex flex-col justify-center">
+                        <AnimatePresence mode="wait">
+
+                            {/* STEP 1: PARTY SIZE */}
+                            {step === 1 && (
+                                <motion.div
+                                    key="step1"
+                                    variants={variants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    transition={{ duration: 0.4, ease: "easeOut" }}
+                                    className="w-full"
                                 >
-                                    {selectedDate ? selectedDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : "Select Date"}
-                                </button>
+                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 1/3</div>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">How many guests?</h2>
 
-                                {isCalendarOpen && (
-                                    <div className="absolute top-full left-0 mt-4 z-50">
-                                        <Calendar
-                                            onSelect={(date) => {
-                                                setSelectedDate(date);
-                                                setCalendarOpen(false);
-                                            }}
-                                            selectedDate={selectedDate || new Date()}
-                                            onClose={() => setCalendarOpen(false)}
+                                    <div className="grid grid-cols-4 md:grid-cols-6 gap-3 mb-8">
+                                        {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+                                            <button
+                                                key={num}
+                                                onClick={() => setPartySize(num)}
+                                                className={`aspect-square rounded-2xl flex items-center justify-center text-xl font-medium transition-all duration-300 ${partySize === num ? "bg-black text-white shadow-lg scale-105" : "bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50"}`}
+                                            >
+                                                {num}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex justify-end">
+                                        <button
+                                            disabled={!partySize}
+                                            onClick={nextStep}
+                                            className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all"
+                                        >
+                                            Next &rarr;
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* STEP 2: DATE & TIME */}
+                            {step === 2 && (
+                                <motion.div
+                                    key="step2"
+                                    variants={variants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    transition={{ duration: 0.4, ease: "easeOut" }}
+                                    className="w-full"
+                                >
+                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 2/3</div>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">When should we expect you?</h2>
+
+                                    <div className="space-y-6 mb-8">
+                                        <div className="relative">
+                                            <label className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2 block">Date</label>
+                                            <button
+                                                onClick={() => setCalendarOpen(!isCalendarOpen)}
+                                                className="w-full text-left text-2xl border-b border-neutral-200 py-3 focus:outline-none border-b-[#EAB308] bg-transparent"
+                                            >
+                                                {selectedDate ? selectedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : "Select a date"}
+                                            </button>
+                                            {isCalendarOpen && (
+                                                <div className="absolute top-full left-0 mt-4 z-50">
+                                                    <Calendar
+                                                        onSelect={(date) => {
+                                                            setSelectedDate(date);
+                                                            setCalendarOpen(false);
+                                                        }}
+                                                        selectedDate={selectedDate || new Date()}
+                                                        onClose={() => setCalendarOpen(false)}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2 block">Time</label>
+                                            <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+                                                {["19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00"].map((time) => (
+                                                    <button
+                                                        key={time}
+                                                        onClick={() => setSelectedTime(time)}
+                                                        className={`px-6 py-3 rounded-xl border font-medium transition-all whitespace-nowrap ${selectedTime === time ? "bg-black text-white border-black" : "bg-white border-neutral-200 hover:border-black"}`}
+                                                    >
+                                                        {time}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-between items-center">
+                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Go Back</button>
+                                        <button
+                                            disabled={!selectedDate || !selectedTime}
+                                            onClick={nextStep}
+                                            className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all"
+                                        >
+                                            Next &rarr;
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* STEP 3: DETAILS */}
+                            {step === 3 && (
+                                <motion.div
+                                    key="step3"
+                                    variants={variants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    transition={{ duration: 0.4, ease: "easeOut" }}
+                                    className="w-full"
+                                >
+                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Final Step</div>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Almost there.</h2>
+
+                                    <div className="space-y-6 mb-8">
+                                        <input
+                                            type="text"
+                                            placeholder="Full Name"
+                                            className="w-full bg-transparent border-b border-neutral-200 py-4 text-xl placeholder:text-neutral-300 focus:outline-none focus:border-black transition-all"
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        />
+                                        <input
+                                            type="email"
+                                            placeholder="Email Address"
+                                            className="w-full bg-transparent border-b border-neutral-200 py-4 text-xl placeholder:text-neutral-300 focus:outline-none focus:border-black transition-all"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        />
+                                        <input
+                                            type="tel"
+                                            placeholder="Phone Number"
+                                            className="w-full bg-transparent border-b border-neutral-200 py-4 text-xl placeholder:text-neutral-300 focus:outline-none focus:border-black transition-all"
+                                            value={formData.phone}
+                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                         />
                                     </div>
-                                )}
-                            </div>
-                            <div className="space-y-3">
-                                <label className="text-xs font-bold uppercase tracking-wider text-neutral-400">Time</label>
-                                <select className="w-full border-b-2 border-neutral-100 py-2 font-serif text-xl focus:outline-none focus:border-[#EAB308] bg-transparent transition-colors appearance-none cursor-pointer">
-                                    <option>19:00</option>
-                                    <option>20:00</option>
-                                    <option>21:00</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        {/* Contact Details */}
-                        <div className="space-y-6">
-                            <input type="text" placeholder="Full Name" className="w-full border-b border-neutral-200 py-3 text-lg focus:outline-none focus:border-black transition-colors" />
-                            <input type="email" placeholder="Email Address" className="w-full border-b border-neutral-200 py-3 text-lg focus:outline-none focus:border-black transition-colors" />
-                            <input type="tel" placeholder="Phone Number" className="w-full border-b border-neutral-200 py-3 text-lg focus:outline-none focus:border-black transition-colors" />
-                        </div>
+                                    <div className="bg-[#F2EFE5] p-6 rounded-2xl mb-8 border border-black/5">
+                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Summary</p>
+                                        <div className="flex justify-between items-baseline mb-1">
+                                            <span className="text-lg font-medium">{selectedDate?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} at {selectedTime}</span>
+                                            <span className="text-sm text-neutral-500">{partySize} Guests</span>
+                                        </div>
+                                    </div>
 
-                        <button className="w-full py-4 bg-black text-white font-bold uppercase tracking-widest rounded-xl hover:bg-neutral-800 transition-all mt-4 shadow-lg shadow-black/20">
-                            Confirm Reservation
-                        </button>
-                    </form>
+                                    <div className="flex justify-between items-center">
+                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Go Back</button>
+                                        <button
+                                            className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
+                                        >
+                                            Confirm Booking
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                        </AnimatePresence>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="mt-8 text-xs text-neutral-400 uppercase tracking-widest z-20">
+                        Based in Madrid &mdash; Est. 2026
+                    </div>
                 </div>
 
-                {/* RIGHT: Visual / Mood */}
-                <div className="relative bg-neutral-900 hidden md:block">
-                    <div className="absolute inset-0 opacity-60">
-                        <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+                {/* RIGHT COLUMN: Visuals */}
+                <div className="relative rounded-[2rem] overflow-hidden bg-neutral-200 hidden md:block">
+                    <div className="absolute inset-0 bg-neutral-900">
+                        <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center grayscale-[20%] transition-all duration-1000 hover:scale-105" />
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
 
-                    <div className="absolute bottom-12 left-12 right-12 text-white">
-                        <div className="text-[#EAB308] text-4xl mb-4">
-                            &quot;
-                        </div>
-                        <p className="text-2xl font-serif leading-relaxed mb-6">
-                            It is not just about the food. It is about the moment, the company, and the memory.
-                        </p>
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-full bg-neutral-700 overflow-hidden">
-                                <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1583394600792-6d1872123d13?q=80&w=2000&auto=format&fit=crop')] bg-cover"></div>
-                            </div>
-                            <div>
-                                <p className="text-sm font-bold uppercase tracking-wider">Keko Team</p>
-                                <p className="text-xs text-neutral-400">Madrid, Spain</p>
-                            </div>
-                        </div>
+                    {/* Dynamic Quote based on step */}
+                    <div className="absolute bottom-8 right-8 bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl max-w-xs text-white">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={step}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <p className="text-sm font-medium">
+                                    {step === 1 && "\"The perfect evening starts with the right company.\""}
+                                    {step === 2 && "\"We are ready when you are.\""}
+                                    {step === 3 && "\"Just one step away from an unforgettable night.\""}
+                                </p>
+                                <div className="mt-2 text-xs opacity-70">&mdash; Keko Experience</div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
 

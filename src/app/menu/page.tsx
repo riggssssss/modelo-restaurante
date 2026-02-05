@@ -1,14 +1,41 @@
+"use client";
+
+import { useState } from "react";
 import TransitionLink from "@/components/TransitionLink";
+import MobileMenu from "@/components/MobileMenu";
 
 export default function MenuPage() {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
     return (
         <main className="min-h-screen bg-[#F8F5EE] font-sans">
+            <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
             {/* Hero Header */}
             <div className="relative h-[40vh] md:h-[50vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-neutral-900">
                     <div className="w-full h-full opacity-60 bg-[url('https://images.unsplash.com/photo-1544025162-d7669d26d391?q=80&w=2600&auto=format&fit=crop')] bg-cover bg-center"></div>
                 </div>
+
+                {/* Navbar - Absolute & White text */}
+                <header className="absolute top-0 left-0 w-full p-4 md:p-8 flex justify-between items-center z-50 text-white">
+                    <TransitionLink href="/" className="text-xl font-bold tracking-tight">KEKO.</TransitionLink>
+                    <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-90">
+                        <TransitionLink href="/about" className="hover:opacity-100">About</TransitionLink>
+                        <TransitionLink href="/menu" className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">Menu</TransitionLink>
+                        <TransitionLink href="/reservations" className="hover:opacity-100">Bookings</TransitionLink>
+                    </nav>
+                    <div className="md:hidden">
+                        <button
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            className="space-y-1.5 cursor-pointer p-2"
+                        >
+                            <div className="w-6 h-0.5 bg-white"></div>
+                            <div className="w-6 h-0.5 bg-white"></div>
+                        </button>
+                    </div>
+                </header>
+
                 <div className="relative z-10 text-center text-white p-4">
                     <span className="inline-block border border-white/30 bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
                         Seasonal Menu &bull; Winter 2026

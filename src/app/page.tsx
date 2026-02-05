@@ -25,7 +25,7 @@ export default function Home() {
         <div className="relative flex flex-col justify-between p-6 md:p-12 rounded-[2rem] bg-[#F8F5EE]">
           {/* Header / Nav */}
           <header className="flex justify-between items-center w-full">
-            <div className="text-xl font-bold tracking-tight">KEKO.</div>
+            <TransitionLink href="/" className="text-xl font-bold tracking-tight">KEKO.</TransitionLink>
             <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
               <TransitionLink href="/about" className="hover:opacity-100">About</TransitionLink>
               <TransitionLink href="/menu" className="hover:opacity-100">Menu</TransitionLink>

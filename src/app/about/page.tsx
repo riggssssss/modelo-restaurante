@@ -1,31 +1,66 @@
+"use client";
 
+import { useState } from "react";
+import TransitionLink from "@/components/TransitionLink";
+import MobileMenu from "@/components/MobileMenu";
 
 export default function AboutPage() {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
     return (
-        <main className="min-h-screen bg-[#F8F5EE] p-4 md:p-8 font-sans pt-20">
+        <main className="min-h-screen bg-[#F8F5EE] p-4 md:p-8 font-sans">
+            <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
             <div className="w-full max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[calc(100vh-4rem)]">
                 {/* Left: Text */}
-                <div className="flex flex-col justify-center p-8 md:p-20 order-2 md:order-1">
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#EAB308] mb-6">Our Story</span>
-                    <h1 className="text-5xl md:text-7xl font-serif leading-tight mb-10">
-                        Born from a love of <span className="italic">tradition</span> & innovation.
-                    </h1>
-                    <div className="space-y-6 text-lg text-neutral-600 leading-relaxed max-w-lg">
-                        <p>
-                            Keko started as a dream in a small kitchen in Madrid. We wanted to create a space that felt like home, yet surprised you with every bite.
-                        </p>
-                        <p>
-                            Our philosophy is simple: source the best ingredients, treat them with respect, and serve them with warmth. We believe that dining is not just about sustenance, but about connection.
-                        </p>
-                        <p>
-                            Whether you are here for a quick lunch or a celebratory dinner, we promise an experience that lingers in your memory long after the last bite.
-                        </p>
+                <div className="flex flex-col justify-between p-8 md:p-12 order-2 md:order-1">
+
+                    {/* Header / Nav */}
+                    <header className="flex justify-between items-center w-full mb-8">
+                        <TransitionLink href="/" className="text-xl font-bold tracking-tight">KEKO.</TransitionLink>
+                        <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
+                            <TransitionLink href="/about" className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">About</TransitionLink>
+                            <TransitionLink href="/menu" className="hover:opacity-100">Menu</TransitionLink>
+                            <TransitionLink href="/reservations" className="hover:opacity-100">Bookings</TransitionLink>
+                        </nav>
+                        <div className="md:hidden">
+                            <button
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                className="space-y-1.5 cursor-pointer p-2"
+                            >
+                                <div className="w-6 h-0.5 bg-black"></div>
+                                <div className="w-6 h-0.5 bg-black"></div>
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <div className="flex-grow flex flex-col justify-center">
+                        <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-4">Our Story</div>
+                        <h1 className="text-5xl md:text-7xl font-serif leading-tight mb-10">
+                            Born from a love of <span className="italic">tradition</span> & innovation.
+                        </h1>
+                        <div className="space-y-6 text-lg text-neutral-600 leading-relaxed max-w-lg">
+                            <p>
+                                Keko started as a dream in a small kitchen in Madrid. We wanted to create a space that felt like home, yet surprised you with every bite.
+                            </p>
+                            <p>
+                                Our philosophy is simple: source the best ingredients, treat them with respect, and serve them with warmth. We believe that dining is not just about sustenance, but about connection.
+                            </p>
+                            <p>
+                                Whether you are here for a quick lunch or a celebratory dinner, we promise an experience that lingers in your memory long after the last bite.
+                            </p>
+                        </div>
+
+                        <div className="mt-12">
+                            <img src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2800&auto=format&fit=crop" alt="Signature" className="h-16 opacity-60" />
+                            <p className="text-sm font-bold uppercase tracking-widest mt-4">Chef Adrian Garcia</p>
+                        </div>
                     </div>
 
-                    <div className="mt-12">
-                        <img src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2800&auto=format&fit=crop" alt="Signature" className="h-16 opacity-60" />
-                        <p className="text-sm font-bold uppercase tracking-widest mt-4">Chef Adrian Garcia</p>
+                    {/* Footer */}
+                    <div className="mt-8 text-xs text-neutral-400 uppercase tracking-widest">
+                        Based in Madrid &mdash; Est. 2026
                     </div>
                 </div>
 
