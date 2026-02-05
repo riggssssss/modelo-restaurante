@@ -43,28 +43,28 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
     };
 
     return (
-        <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-neutral-100 w-full max-w-[500px] mx-auto">
-            <div className="flex justify-between items-center mb-8">
-                <button onClick={prevMonth} className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-neutral-100 transition-colors text-neutral-800 border border-neutral-200 hover:border-black">
+        <div className="w-full max-w-[420px] mx-auto">
+            <div className="flex justify-between items-center mb-6">
+                <button onClick={prevMonth} className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
                     &larr;
                 </button>
                 <h3 className="font-serif text-3xl font-medium">
                     {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                 </h3>
-                <button onClick={nextMonth} className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-neutral-100 transition-colors text-neutral-800 border border-neutral-200 hover:border-black">
+                <button onClick={nextMonth} className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
                     &rarr;
                 </button>
             </div>
 
-            <div className="grid grid-cols-7 gap-3 mb-4 text-center">
+            <div className="grid grid-cols-7 gap-2 mb-2 text-center">
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => (
-                    <div key={d} className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
+                    <div key={d} className="text-xs font-bold text-neutral-400 uppercase tracking-widest pb-2">
                         {d}
                     </div>
                 ))}
             </div>
 
-            <div className="grid grid-cols-7 gap-3">
+            <div className="grid grid-cols-7 gap-2">
                 {empties.map((_, i) => (
                     <div key={`empty-${i}`} />
                 ))}
@@ -73,10 +73,10 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
                         key={day}
                         onClick={() => handleDayClick(day)}
                         className={`
-                aspect-square flex items-center justify-center text-xl font-medium rounded-2xl transition-all duration-300
+                aspect-square flex items-center justify-center text-lg font-medium rounded-2xl transition-all duration-300
                 ${isSelected(day)
-                                ? "bg-black text-white shadow-xl scale-105"
-                                : "bg-white border border-neutral-100 text-neutral-600 hover:border-black/30 hover:bg-neutral-50"
+                                ? "bg-black text-white shadow-lg scale-105"
+                                : "bg-white border border-neutral-100 text-neutral-600 hover:border-black/20 hover:bg-neutral-50"
                             }
             `}
                     >
