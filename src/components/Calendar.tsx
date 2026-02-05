@@ -44,20 +44,21 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
 
     return (
         <div className="w-full">
-            <div className="relative mb-8">
-                <div className="absolute top-0 right-0 flex gap-2">
-                    <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
-                        &larr;
-                    </button>
-                    <button onClick={nextMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-neutral-100 hover:border-black/20 hover:bg-neutral-50 transition-all text-neutral-800">
-                        &rarr;
-                    </button>
-                </div>
-                <div className="flex flex-wrap justify-between items-baseline gap-y-0 pr-24">
-                    <h2 className="text-4xl md:text-5xl font-serif leading-none">Select a date</h2>
+            <div className="flex flex-wrap justify-between items-center gap-y-0">
+                <h2 className="text-4xl md:text-5xl font-serif leading-none">Select a date</h2>
+
+                <div className="flex items-center gap-4">
                     <h3 className="text-4xl md:text-5xl font-serif italic leading-none text-right">
                         {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </h3>
+                    <div className="flex gap-2">
+                        <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-black hover:bg-neutral-800 transition-all text-white">
+                            &larr;
+                        </button>
+                        <button onClick={nextMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-black hover:bg-neutral-800 transition-all text-white">
+                            &rarr;
+                        </button>
+                    </div>
                 </div>
             </div>
 
