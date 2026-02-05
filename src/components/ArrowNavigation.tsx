@@ -5,7 +5,7 @@ import { useTransition } from "@/context/TransitionProvider";
 
 export default function ArrowNavigation() {
     const pathname = usePathname();
-    const { navigate } = useTransition();
+    const { startTransition } = useTransition();
 
     // Define the linear flow
     const flow = [
@@ -27,7 +27,7 @@ export default function ArrowNavigation() {
                 <div className="pointer-events-auto h-full">
                     {prev && (
                         <button
-                            onClick={() => navigate(prev.path)}
+                            onClick={() => startTransition(prev.path)}
                             className="group relative h-full w-24 md:w-40 flex items-center justify-start overflow-hidden cursor-pointer bg-transparent border-none p-0 appearance-none"
                         >
                             {/* Gradient Background - Smoother Transition */}
@@ -53,7 +53,7 @@ export default function ArrowNavigation() {
                 <div className="pointer-events-auto h-full">
                     {next && (
                         <button
-                            onClick={() => navigate(next.path)}
+                            onClick={() => startTransition(next.path)}
                             className="group relative h-full w-24 md:w-40 flex items-center justify-end overflow-hidden cursor-pointer bg-transparent border-none p-0 appearance-none"
                         >
                             {/* Gradient Background - Smoother Transition */}

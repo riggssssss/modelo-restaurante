@@ -115,7 +115,6 @@ export default function ReservationsPage() {
                                     className="w-full"
                                 >
                                     <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 2/4</div>
-                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Select a date</h2>
 
                                     <div className="mb-8 flex justify-center">
                                         <Calendar
