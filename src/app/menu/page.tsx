@@ -1,4 +1,4 @@
-import Link from "next/link";
+import TransitionLink from "@/components/TransitionLink";
 
 export default function MenuPage() {
     return (
@@ -126,9 +126,9 @@ export default function MenuPage() {
 
                 <div className="mt-32 text-center pb-20 border-t border-black/5 pt-20">
                     <h3 className="text-3xl font-serif mb-8">Ready to taste?</h3>
-                    <Link href="/reservations" className="px-10 py-5 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all inline-block shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                    <TransitionLink href="/reservations" className="px-10 py-5 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all inline-block shadow-xl hover:shadow-2xl hover:-translate-y-1">
                         Book a Table
-                    </Link>
+                    </TransitionLink>
                 </div>
             </div>
         </main>

@@ -1,8 +1,17 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import TransitionLink from "@/components/TransitionLink";
+import MobileMenu from "@/components/MobileMenu";
 
 export default function Home() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <main className="min-h-screen p-4 md:p-8 flex items-center justify-center">
+      <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+
       {/* 
         Container: 
         - Max width restricted 
@@ -18,16 +27,19 @@ export default function Home() {
           <header className="flex justify-between items-center w-full">
             <div className="text-xl font-bold tracking-tight">KEKO.</div>
             <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
-              <a href="/about" className="hover:opacity-100">About</a>
-              <a href="/menu" className="hover:opacity-100">Menu</a>
-              <a href="/reservations" className="hover:opacity-100">Bookings</a>
+              <TransitionLink href="/about" className="hover:opacity-100">About</TransitionLink>
+              <TransitionLink href="/menu" className="hover:opacity-100">Menu</TransitionLink>
+              <TransitionLink href="/reservations" className="hover:opacity-100">Bookings</TransitionLink>
             </nav>
             <div className="md:hidden">
-              {/* Mobile Menu Icon Placeholder */}
-              <div className="space-y-1.5 cursor-pointer">
-                <div className="w-6 h-0.5 bg-current"></div>
-                <div className="w-6 h-0.5 bg-current"></div>
-              </div>
+              {/* Mobile Menu Icon */}
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="space-y-1.5 cursor-pointer p-2"
+              >
+                <div className="w-6 h-0.5 bg-black"></div>
+                <div className="w-6 h-0.5 bg-black"></div>
+              </button>
             </div>
           </header>
 
@@ -50,12 +62,12 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <a href="/reservations" className="px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all text-center">
+              <TransitionLink href="/reservations" className="px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all text-center">
                 Reserve Table
-              </a>
-              <a href="/menu" className="px-8 py-4 border border-black rounded-full font-medium hover:bg-black/5 transition-all text-center">
+              </TransitionLink>
+              <TransitionLink href="/menu" className="px-8 py-4 border border-black rounded-full font-medium hover:bg-black/5 transition-all text-center">
                 View Menu
-              </a>
+              </TransitionLink>
             </div>
           </div>
 

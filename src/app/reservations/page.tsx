@@ -1,14 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import Calendar from "@/components/Calendar";
+import TransitionLink from "@/components/TransitionLink";
 
 export default function ReservationsPage() {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [isCalendarOpen, setCalendarOpen] = useState(false);
     return (
         <main className="min-h-screen bg-[#F8F5EE] p-4 md:p-8 font-sans flex items-center justify-center pt-20">
+            <TransitionLink href="/" className="fixed top-6 left-6 md:top-12 md:left-12 text-sm font-bold uppercase tracking-wider hover:opacity-70 z-50">
+                &larr; Back
+            </TransitionLink>
 
             <div className="w-full max-w-[1600px] bg-white rounded-[2rem] shadow-2xl shadow-neutral-200 overflow-hidden grid grid-cols-1 md:grid-cols-2 min-h-[700px]">
 

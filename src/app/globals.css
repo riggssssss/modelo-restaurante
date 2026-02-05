@@ -63,24 +63,24 @@
 
   @keyframes parallaxExit {
     0% {
-      transform: translateX(0);
+      transform: translateX(0) scale(1);
       opacity: 1;
     }
 
     100% {
-      transform: translateX(100px);
+      transform: translateX(300px) scale(0.95);
       opacity: 0;
     }
   }
 
   @keyframes parallaxEnter {
     0% {
-      transform: translateX(-100px);
+      transform: translateX(-300px) scale(0.95);
       opacity: 0;
     }
 
     100% {
-      transform: translateX(0);
+      transform: translateX(0) scale(1);
       opacity: 1;
     }
   }
