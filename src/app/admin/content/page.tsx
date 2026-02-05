@@ -1,38 +1,133 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase, SiteContent } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 
-// Define the content structure
-interface ContentFields {
-    hero_title: string;
-    hero_subtitle: string;
-    hero_image: string;
-    about_title: string;
-    about_text: string;
-    about_image: string;
-    contact_phone: string;
-    contact_email: string;
-    contact_address: string;
-    opening_hours: string;
-}
-
-const defaultContent: ContentFields = {
-    hero_title: 'Welcome to Keko',
-    hero_subtitle: 'Critically Acclaimed Cuisine',
-    hero_image: '',
-    about_title: 'Our Story',
-    about_text: 'Tell your story here...',
-    about_image: '',
-    contact_phone: '+34 600 000 000',
-    contact_email: 'hello@keko.com',
-    contact_address: 'Madrid, Spain',
-    opening_hours: 'Tue-Sun: 13:00-23:00',
+// Define all content fields organized by page
+const contentSchema = {
+    home: {
+        label: 'Home',
+        sections: [
+            {
+                title: 'Hero Section',
+                fields: [
+                    { key: 'home_badge', label: 'Badge', type: 'text', placeholder: 'New Opening 2026' },
+                    { key: 'home_title', label: 'Title', type: 'textarea', placeholder: 'Critically acclaimed cuisine.' },
+                    { key: 'home_subtitle', label: 'Subtitle', type: 'textarea', placeholder: 'Don\'t just take our word for it...' },
+                ]
+            },
+            {
+                title: 'Call to Action Buttons',
+                fields: [
+                    { key: 'home_cta_1', label: 'Button 1 Text', type: 'text', placeholder: 'Reserve Table' },
+                    { key: 'home_cta_2', label: 'Button 2 Text', type: 'text', placeholder: 'View Menu' },
+                ]
+            },
+            {
+                title: 'Quote Card',
+                fields: [
+                    { key: 'home_quote', label: 'Quote', type: 'text', placeholder: '"The best dining experience..."' },
+                    { key: 'home_quote_author', label: 'Author', type: 'text', placeholder: 'The Food Guide' },
+                ]
+            },
+            {
+                title: 'Footer',
+                fields: [
+                    { key: 'home_footer', label: 'Footer Text', type: 'text', placeholder: 'Based in Madrid — Est. 2026' },
+                ]
+            }
+        ]
+    },
+    about: {
+        label: 'About',
+        sections: [
+            {
+                title: 'Hero Section',
+                fields: [
+                    { key: 'about_badge', label: 'Badge', type: 'text', placeholder: 'Our Story' },
+                    { key: 'about_title', label: 'Title', type: 'textarea', placeholder: 'Born from a love of tradition...' },
+                ]
+            },
+            {
+                title: 'Story Paragraphs',
+                fields: [
+                    { key: 'about_p1', label: 'Paragraph 1', type: 'textarea', placeholder: 'Keko started as a dream...' },
+                    { key: 'about_p2', label: 'Paragraph 2', type: 'textarea', placeholder: 'Our philosophy is simple...' },
+                    { key: 'about_p3', label: 'Paragraph 3', type: 'textarea', placeholder: 'Whether you are here for...' },
+                ]
+            },
+            {
+                title: 'Chef Section',
+                fields: [
+                    { key: 'about_chef_name', label: 'Chef Name', type: 'text', placeholder: 'Chef Adrian Garcia' },
+                ]
+            },
+            {
+                title: 'Image Quote',
+                fields: [
+                    { key: 'about_image_quote', label: 'Quote on Image', type: 'text', placeholder: '"Every dish tells a story..."' },
+                ]
+            },
+            {
+                title: 'Footer',
+                fields: [
+                    { key: 'about_footer', label: 'Footer Text', type: 'text', placeholder: 'Based in Madrid — Est. 2026' },
+                ]
+            }
+        ]
+    },
+    menu: {
+        label: 'Menu',
+        sections: [
+            {
+                title: 'Hero Section',
+                fields: [
+                    { key: 'menu_badge', label: 'Badge', type: 'text', placeholder: 'Seasonal Menu • Winter 2026' },
+                    { key: 'menu_title', label: 'Title', type: 'text', placeholder: 'The Menu' },
+                ]
+            },
+            {
+                title: 'Introduction',
+                fields: [
+                    { key: 'menu_intro', label: 'Intro Quote', type: 'textarea', placeholder: '"Our menu changes daily..."' },
+                ]
+            },
+            {
+                title: 'Call to Action',
+                fields: [
+                    { key: 'menu_cta_title', label: 'CTA Title', type: 'text', placeholder: 'Ready to taste?' },
+                    { key: 'menu_cta_button', label: 'Button Text', type: 'text', placeholder: 'Book a Table' },
+                ]
+            }
+        ]
+    },
+    global: {
+        label: 'Global',
+        sections: [
+            {
+                title: 'Brand',
+                fields: [
+                    { key: 'global_brand_name', label: 'Brand Name', type: 'text', placeholder: 'KEKO.' },
+                ]
+            },
+            {
+                title: 'Contact',
+                fields: [
+                    { key: 'global_phone', label: 'Phone', type: 'text', placeholder: '+34 600 000 000' },
+                    { key: 'global_email', label: 'Email', type: 'text', placeholder: 'hello@keko.com' },
+                    { key: 'global_address', label: 'Address', type: 'text', placeholder: 'Madrid, Spain' },
+                ]
+            }
+        ]
+    }
 };
 
+type ContentValues = Record<string, string>;
+
 export default function AdminContentPage() {
-    const [content, setContent] = useState<ContentFields>(defaultContent);
+    const [activeTab, setActiveTab] = useState<'home' | 'about' | 'menu' | 'global'>('home');
+    const [content, setContent] = useState<ContentValues>({});
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
@@ -49,15 +144,17 @@ export default function AdminContentPage() {
         if (error) {
             console.error('Error fetching content:', error);
         } else if (data) {
-            const contentMap: Partial<ContentFields> = {};
-            data.forEach((item: SiteContent) => {
-                if (item.key in defaultContent) {
-                    contentMap[item.key as keyof ContentFields] = (item.value as { text: string }).text || '';
-                }
+            const contentMap: ContentValues = {};
+            data.forEach((item: { key: string; value: { text?: string } }) => {
+                contentMap[item.key] = item.value?.text || '';
             });
-            setContent({ ...defaultContent, ...contentMap });
+            setContent(contentMap);
         }
         setLoading(false);
+    };
+
+    const handleChange = (key: string, value: string) => {
+        setContent(prev => ({ ...prev, [key]: value }));
     };
 
     const handleSave = async () => {
@@ -75,12 +172,10 @@ export default function AdminContentPage() {
         }
 
         setSaving(false);
-        alert('Content saved successfully!');
+        alert('¡Contenido guardado!');
     };
 
-    const handleChange = (key: keyof ContentFields, value: string) => {
-        setContent(prev => ({ ...prev, [key]: value }));
-    };
+    const tabs = Object.entries(contentSchema) as [keyof typeof contentSchema, typeof contentSchema.home][];
 
     if (loading) {
         return (
@@ -92,6 +187,7 @@ export default function AdminContentPage() {
 
     return (
         <div className="min-h-screen bg-[#F8F5EE] font-sans">
+            {/* Header */}
             <nav className="bg-white border-b border-neutral-200 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
                 <Link href="/admin/dashboard" className="text-xl font-bold tracking-tight">
                     KEKO. <span className="text-xs font-medium text-neutral-400 ml-1 uppercase tracking-wider">Admin</span>
@@ -99,128 +195,80 @@ export default function AdminContentPage() {
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="bg-black text-white px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                    className="bg-black text-white px-6 py-2 rounded-lg text-sm font-bold uppercase tracking-wider hover:bg-neutral-800 disabled:opacity-50 transition-colors"
                 >
-                    {saving ? 'Saving...' : 'Save All'}
+                    {saving ? 'Guardando...' : 'Guardar Todo'}
                 </button>
             </nav>
 
-            <main className="p-6 max-w-4xl mx-auto">
-                <h1 className="text-3xl font-serif mb-8">Edit Site Content</h1>
+            <main className="max-w-4xl mx-auto p-6">
+                <h1 className="text-3xl font-serif mb-2">Editar Contenido</h1>
+                <p className="text-neutral-500 mb-8">Modifica los textos de cada página de la web.</p>
 
-                {/* Hero Section */}
-                <section className="bg-white rounded-2xl border border-neutral-100 p-6 mb-6">
-                    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-black rounded-full"></span>
-                        Hero Section
-                    </h2>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Main Title</label>
-                            <input
-                                value={content.hero_title}
-                                onChange={(e) => handleChange('hero_title', e.target.value)}
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Subtitle</label>
-                            <input
-                                value={content.hero_subtitle}
-                                onChange={(e) => handleChange('hero_subtitle', e.target.value)}
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Hero Image URL</label>
-                            <input
-                                value={content.hero_image}
-                                onChange={(e) => handleChange('hero_image', e.target.value)}
-                                placeholder="https://..."
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
-                        </div>
-                    </div>
-                </section>
+                {/* Tabs */}
+                <div className="flex gap-2 mb-8 border-b border-neutral-200 pb-4">
+                    {tabs.map(([key, page]) => (
+                        <button
+                            key={key}
+                            onClick={() => setActiveTab(key)}
+                            className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-colors ${activeTab === key
+                                    ? 'bg-black text-white'
+                                    : 'bg-white border border-neutral-200 hover:border-black/30'
+                                }`}
+                        >
+                            {page.label}
+                        </button>
+                    ))}
+                </div>
 
-                {/* About Section */}
-                <section className="bg-white rounded-2xl border border-neutral-100 p-6 mb-6">
-                    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-black rounded-full"></span>
-                        About Section
-                    </h2>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Title</label>
-                            <input
-                                value={content.about_title}
-                                onChange={(e) => handleChange('about_title', e.target.value)}
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
+                {/* Content Sections */}
+                <div className="space-y-6">
+                    {contentSchema[activeTab].sections.map((section, sectionIndex) => (
+                        <div key={sectionIndex} className="bg-white rounded-2xl border border-neutral-100 p-6">
+                            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                                <span className="w-2 h-2 bg-black rounded-full"></span>
+                                {section.title}
+                            </h2>
+                            <div className="space-y-4">
+                                {section.fields.map((field) => (
+                                    <div key={field.key}>
+                                        <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1.5 font-medium">
+                                            {field.label}
+                                        </label>
+                                        {field.type === 'textarea' ? (
+                                            <textarea
+                                                value={content[field.key] || ''}
+                                                onChange={(e) => handleChange(field.key, e.target.value)}
+                                                placeholder={field.placeholder}
+                                                rows={3}
+                                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm resize-none focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors"
+                                            />
+                                        ) : (
+                                            <input
+                                                type="text"
+                                                value={content[field.key] || ''}
+                                                onChange={(e) => handleChange(field.key, e.target.value)}
+                                                placeholder={field.placeholder}
+                                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors"
+                                            />
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Text</label>
-                            <textarea
-                                value={content.about_text}
-                                onChange={(e) => handleChange('about_text', e.target.value)}
-                                rows={5}
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm resize-none"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Image URL</label>
-                            <input
-                                value={content.about_image}
-                                onChange={(e) => handleChange('about_image', e.target.value)}
-                                placeholder="https://..."
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
-                        </div>
-                    </div>
-                </section>
+                    ))}
+                </div>
 
-                {/* Contact Info */}
-                <section className="bg-white rounded-2xl border border-neutral-100 p-6">
-                    <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-black rounded-full"></span>
-                        Contact Information
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Phone</label>
-                            <input
-                                value={content.contact_phone}
-                                onChange={(e) => handleChange('contact_phone', e.target.value)}
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Email</label>
-                            <input
-                                value={content.contact_email}
-                                onChange={(e) => handleChange('contact_email', e.target.value)}
-                                type="email"
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Address</label>
-                            <input
-                                value={content.contact_address}
-                                onChange={(e) => handleChange('contact_address', e.target.value)}
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1 font-medium">Opening Hours</label>
-                            <input
-                                value={content.opening_hours}
-                                onChange={(e) => handleChange('opening_hours', e.target.value)}
-                                className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm"
-                            />
-                        </div>
-                    </div>
-                </section>
+                {/* Bottom Save Button */}
+                <div className="mt-8 text-center">
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="bg-black text-white px-10 py-4 rounded-lg text-sm font-bold uppercase tracking-wider hover:bg-neutral-800 disabled:opacity-50 transition-colors"
+                    >
+                        {saving ? 'Guardando...' : 'Guardar Todos los Cambios'}
+                    </button>
+                </div>
             </main>
         </div>
     );

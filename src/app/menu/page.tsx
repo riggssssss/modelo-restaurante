@@ -1,11 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TransitionLink from "@/components/TransitionLink";
 import MobileMenu from "@/components/MobileMenu";
+import { getSiteContent, getContent, SiteContentMap } from "@/lib/content";
 
 export default function MenuPage() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [content, setContent] = useState<SiteContentMap>({});
+
+    useEffect(() => {
+        getSiteContent().then(setContent);
+    }, []);
+
+    const c = (key: string, fallback: string) => getContent(content, key, fallback);
 
     return (
         <main className="min-h-screen bg-[#F8F5EE] font-sans">
@@ -17,9 +25,11 @@ export default function MenuPage() {
                     <div className="w-full h-full opacity-60 bg-[url('https://images.unsplash.com/photo-1544025162-d7669d26d391?q=80&w=2600&auto=format&fit=crop')] bg-cover bg-center"></div>
                 </div>
 
-                {/* Navbar - Absolute & White text */}
+                {/* Navbar */}
                 <header className="absolute top-0 left-0 w-full p-4 md:p-8 flex justify-between items-center z-50 text-white">
-                    <TransitionLink href="/" className="text-xl font-bold tracking-tight">KEKO.</TransitionLink>
+                    <TransitionLink href="/" className="text-xl font-bold tracking-tight">
+                        {c('global_brand_name', 'KEKO.')}
+                    </TransitionLink>
                     <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-90">
                         <TransitionLink href="/about" className="hover:opacity-100">About</TransitionLink>
                         <TransitionLink href="/menu" className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">Menu</TransitionLink>
@@ -38,10 +48,10 @@ export default function MenuPage() {
 
                 <div className="relative z-10 text-center text-white p-4">
                     <span className="inline-block border border-white/30 bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-                        Seasonal Menu &bull; Winter 2026
+                        {c('menu_badge', 'Seasonal Menu • Winter 2026')}
                     </span>
                     <h1 className="text-6xl md:text-9xl font-serif leading-none tracking-tight">
-                        The Menu
+                        {c('menu_title', 'The Menu')}
                     </h1>
                 </div>
             </div>
@@ -50,7 +60,7 @@ export default function MenuPage() {
 
                 {/* Intro */}
                 <p className="max-w-xl mx-auto text-xl text-center text-neutral-600 mb-24 font-serif italic">
-                    &quot;Our menu changes daily based on what the earth provides. We work closely with local farmers to bring the best of Madrid to your plate.&quot;
+                    {c('menu_intro', '"Our menu changes daily based on what the earth provides. We work closely with local farmers to bring the best of Madrid to your plate."')}
                 </p>
 
                 <section className="space-y-32">
@@ -152,9 +162,9 @@ export default function MenuPage() {
                 </section>
 
                 <div className="mt-32 text-center pb-20 border-t border-black/5 pt-20">
-                    <h3 className="text-3xl font-serif mb-8">Ready to taste?</h3>
+                    <h3 className="text-3xl font-serif mb-8">{c('menu_cta_title', 'Ready to taste?')}</h3>
                     <TransitionLink href="/reservations" className="px-10 py-5 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all inline-block shadow-xl hover:shadow-2xl hover:-translate-y-1">
-                        Book a Table
+                        {c('menu_cta_button', 'Book a Table')}
                     </TransitionLink>
                 </div>
             </div>
