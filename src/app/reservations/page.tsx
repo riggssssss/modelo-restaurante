@@ -4,14 +4,14 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Calendar from "@/components/Calendar";
 import TransitionLink from "@/components/TransitionLink";
-import MobileMenu from "@/components/MobileMenu";
+
 
 export default function ReservationsPage() {
     const [step, setStep] = useState(1);
     const [partySize, setPartySize] = useState<number | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string>("");
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
 
     // Form Data
     const [formData, setFormData] = useState({
@@ -38,28 +38,14 @@ export default function ReservationsPage() {
 
     return (
         <main className="min-h-screen p-4 md:p-8 flex flex-col font-sans">
-            <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+
 
             <div className="w-full max-w-[1600px] bg-transparent grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 h-[calc(100vh-4rem)] min-h-[750px]">
 
                 {/* LEFT COLUMN: Interactive Wizard */}
                 <div className="relative flex flex-col justify-between p-6 md:p-12 rounded-[2rem] bg-[#F8F5EE] overflow-hidden shadow-sm">
 
-                    {/* Header */}
-                    <header className="flex justify-between items-center w-full mb-8 z-20">
-                        <TransitionLink href="/" className="text-xl font-bold tracking-tight">KEKO.</TransitionLink>
-                        <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
-                            <TransitionLink href="/about" className="hover:opacity-100">About</TransitionLink>
-                            <TransitionLink href="/menu" className="hover:opacity-100">Menu</TransitionLink>
-                            <TransitionLink href="/reservations" className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">Bookings</TransitionLink>
-                        </nav>
-                        <div className="md:hidden">
-                            <button onClick={() => setIsMobileMenuOpen(true)} className="space-y-1.5 cursor-pointer p-2">
-                                <div className="w-6 h-0.5 bg-black"></div>
-                                <div className="w-6 h-0.5 bg-black"></div>
-                            </button>
-                        </div>
-                    </header>
+
 
                     {/* Progress Indicator */}
                     <div className="flex gap-2 mb-8 z-20">
