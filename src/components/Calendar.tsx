@@ -43,7 +43,6 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
     };
 
     return (
-    return (
         <div className="w-full">
             <div className="flex flex-col md:flex-row md:items-baseline md:gap-6 mb-8">
                 <h2 className="text-4xl md:text-5xl font-serif leading-tight">Select a date</h2>
