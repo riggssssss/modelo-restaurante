@@ -83,7 +83,7 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
                 aspect-square flex items-center justify-center text-lg md:text-xl font-medium rounded-2xl transition-all duration-300
                 ${isSelected(day)
                                 ? "bg-black text-white shadow-lg scale-105"
-                                : "bg-white border border-neutral-100 text-neutral-600 hover:border-black/20 hover:bg-neutral-50"
+                                : "bg-transparent md:bg-white border-none md:border md:border-neutral-100 text-neutral-600 md:hover:border-black/20 md:hover:bg-neutral-50"
                             }
             `}
                     >
