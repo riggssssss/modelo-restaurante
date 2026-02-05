@@ -76,7 +76,7 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 1/4</div>
+                                >
                                     <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">How many guests?</h2>
 
                                     <div className="grid grid-cols-4 md:grid-cols-6 gap-3 mb-8">
@@ -145,7 +145,7 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Step 3/4</div>
+                                >
                                     <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Pick a time</h2>
 
                                     <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mb-8">
@@ -184,7 +184,7 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                    <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-6">Final Step</div>
+                                >
                                     <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Complete your booking</h2>
 
                                     <div className="space-y-6 mb-8">
