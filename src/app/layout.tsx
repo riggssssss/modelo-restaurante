@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
-import ArrowNavigation from "@/components/ArrowNavigation";
 import TransitionProvider from "@/context/TransitionProvider";
 import ParallaxContent from "@/components/ParallaxContent";
 import "./globals.css";
@@ -31,7 +30,6 @@ export default function RootLayout({
         className={`${inter.variable} ${geistMono.variable} antialiased font-sans`}
       >
         <TransitionProvider>
-          <ArrowNavigation />
           <ParallaxContent>
             {children}
           </ParallaxContent>
