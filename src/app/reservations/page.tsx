@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Calendar from "@/components/Calendar";
 import TransitionLink from "@/components/TransitionLink";
+import MobileMenu from "@/components/MobileMenu";
 
 
 export default function ReservationsPage() {
@@ -11,6 +12,7 @@ export default function ReservationsPage() {
     const [partySize, setPartySize] = useState<number | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string>("");
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 
     // Form Data
@@ -38,14 +40,23 @@ export default function ReservationsPage() {
 
     return (
         <main className="min-h-screen p-4 md:p-8 flex flex-col font-sans">
-
+            <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
             <div className="w-full max-w-[1600px] bg-transparent grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 h-[calc(100vh-4rem)] min-h-[750px]">
 
                 {/* LEFT COLUMN: Interactive Wizard */}
                 <div className="relative flex flex-col justify-between p-6 md:p-12 rounded-[2rem] bg-[#F8F5EE] overflow-hidden shadow-sm">
 
-
+                    {/* Mobile Header (Hidden on Desktop) */}
+                    <header className="flex justify-between items-center w-full mb-8 z-20 md:hidden">
+                        <TransitionLink href="/" className="text-xl font-bold tracking-tight">KEKO.</TransitionLink>
+                        <div>
+                            <button onClick={() => setIsMobileMenuOpen(true)} className="space-y-1.5 cursor-pointer p-2">
+                                <div className="w-6 h-0.5 bg-black"></div>
+                                <div className="w-6 h-0.5 bg-black"></div>
+                            </button>
+                        </div>
+                    </header>
 
                     {/* Progress Indicator */}
                     <div className="flex gap-2 mb-8 z-20">
