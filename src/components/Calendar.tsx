@@ -44,11 +44,11 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
 
     return (
         <div className="w-full">
-            <div className="flex flex-col md:flex-row md:items-baseline md:gap-6 mb-8">
+            <div className="flex flex-col md:flex-row md:items-baseline md:gap-4 mb-8">
                 <h2 className="text-4xl md:text-5xl font-serif leading-tight">Select a date</h2>
 
-                <div className="flex items-center gap-4">
-                    <h3 className="font-serif text-2xl font-medium whitespace-nowrap">
+                <div className="flex items-baseline gap-4">
+                    <h3 className="text-4xl md:text-5xl font-serif italic leading-tight whitespace-nowrap">
                         {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </h3>
                     <div className="flex gap-2">
