@@ -145,7 +145,7 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                >
+
                                     <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Pick a time</h2>
 
                                     <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mb-8">
@@ -184,7 +184,7 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                >
+
                                     <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Complete your booking</h2>
 
                                     <div className="space-y-6 mb-8">

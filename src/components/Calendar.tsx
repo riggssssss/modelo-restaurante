@@ -53,10 +53,10 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
                     </h3>
                     <div className="flex gap-2">
                         <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-black hover:bg-neutral-800 transition-all text-white">
-                            &larr;
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
                         </button>
                         <button onClick={nextMonth} className="w-10 h-10 flex items-center justify-center rounded-xl bg-black hover:bg-neutral-800 transition-all text-white">
-                            &rarr;
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
                         </button>
                     </div>
                 </div>
