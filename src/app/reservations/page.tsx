@@ -76,7 +76,7 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
-                                >
+
                                     <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">How many guests?</h2>
 
                                     <div className="grid grid-cols-4 md:grid-cols-6 gap-3 mb-8">
