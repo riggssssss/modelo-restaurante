@@ -1,25 +1,33 @@
 "use client";
 
 import { useTransition } from "@/context/TransitionProvider";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 interface TransitionLinkProps {
     href: string;
     children: ReactNode;
     className?: string;
+    onClick?: () => void;
 }
 
-export default function TransitionLink({ href, children, className }: TransitionLinkProps) {
-    const { navigate } = useTransition();
+export default function TransitionLink({
+    href,
+    children,
+    className,
+    onClick,
+}: TransitionLinkProps) {
+    const { startTransition } = useTransition();
 
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        navigate(href);
+        if (onClick) onClick();
+        startTransition(href);
     };
 
     return (
-        <a href={href} onClick={handleClick} className={className}>
+        <Link href={href} onClick={handleClick} className={className}>
             {children}
-        </a>
+        </Link>
     );
 }

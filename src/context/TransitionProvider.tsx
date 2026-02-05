@@ -1,59 +1,53 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { createContext, useContext, useState, ReactNode } from "react";
+import { useRouter } from "next/navigation";
 
 interface TransitionContextType {
-    navigate: (href: string) => void;
-    transitionStage: 'idle' | 'exiting' | 'entering';
+    startTransition: (href: string) => Promise<void>;
+    isTransitioning: boolean;
 }
 
 const TransitionContext = createContext<TransitionContextType | null>(null);
 
 export const useTransition = () => {
     const context = useContext(TransitionContext);
-    if (!context) throw new Error("useTransition must be used within a TransitionProvider");
+    if (!context) {
+        throw new Error("useTransition must be used within a TransitionProvider");
+    }
     return context;
 };
 
-export default function TransitionProvider({ children }: { children: React.ReactNode }) {
+export default function TransitionProvider({
+    children,
+}: {
+    children: ReactNode;
+}) {
     const router = useRouter();
-    const pathname = usePathname();
-    // State: 'idle', 'exiting', 'entering'
-    const [transitionStage, setTransitionStage] = useState<'idle' | 'exiting' | 'entering'>('entering');
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
-    // Trigger Exit Animation then Push
-    const navigate = (href: string) => {
-        if (href === pathname) return;
-        setTransitionStage('exiting');
+    const startTransition = async (href: string) => {
+        setIsTransitioning(true);
+        // Wait for exit animation (matches CSS duration roughly)
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
-        // Wait for animation (800ms) matches CSS
-        setTimeout(() => {
-            router.push(href);
-        }, 800);
+        router.push(href);
+
+        // Wait for enter animation reset
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        setIsTransitioning(false);
     };
 
-    // Reset to entering when pathname changes
-    useEffect(() => {
-        // When path changes, we are on the new page.
-        setTransitionStage('entering');
-        // After enter animation, go idle
-        const timer = setTimeout(() => {
-            setTransitionStage('idle');
-        }, 800); // Wait for enter animation
-        return () => clearTimeout(timer);
-    }, [pathname]);
-
     return (
-        <TransitionContext.Provider value={{ navigate, transitionStage }}>
-            {/* The Curtain UI - Always present in DOM but hidden to prevent hydration mismatch */}
-            {transitionStage !== 'idle' && (
-                <div
-                    className={`fixed inset-0 z-[100] bg-[#1c1917] pointer-events-none ${transitionStage === 'exiting' ? 'animate-curtain-cover' : 'animate-curtain-reveal'
-                        }`}
-                />
+        <TransitionContext.Provider value={{ startTransition, isTransitioning }}>
+            {/* Curtain Layer */}
+            {isTransitioning && (
+                <div className="fixed inset-0 z-[9999] pointer-events-none flex flex-col">
+                    {/* You can add curtain elements here if needed, or rely on ParallaxContent */}
+                    {/* For now, we rely on the children dealing with the state or a global overlay */}
+                    <div className="absolute inset-0 bg-[#EEDD4A] animate-curtain-cover origin-left" />
+                </div>
             )}
-
             {children}
         </TransitionContext.Provider>
     );

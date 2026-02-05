@@ -1,105 +1,104 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface CalendarProps {
+    selectedDate: Date | null;
     onSelect: (date: Date) => void;
-    selectedDate?: Date;
-    onClose?: () => void;
+    onClose: () => void;
 }
 
-export default function Calendar({ onSelect, selectedDate, onClose }: CalendarProps) {
-    const [currentDate, setCurrentDate] = useState(selectedDate || new Date());
+export default function Calendar({ selectedDate, onSelect, onClose }: CalendarProps) {
+    const [currentMonth, setCurrentMonth] = useState(selectedDate || new Date());
 
-    // Logic to get days in month
     const getDaysInMonth = (year: number, month: number) => {
         return new Date(year, month + 1, 0).getDate();
     };
 
-    const daysInMonth = getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth());
-    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-    // Adjust so Monday is 0? Default JS Sunday is 0. Let's keep Sunday 0 for now or shift based on locale. 
-    // Let's standardise on formatted grid.
+    const getFirstDayOfMonth = (year: number, month: number) => {
+        // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        // Adjust so 0 = Monday if we want Monday start, but let's stick to Sun=0 for standard US or Mon=1 for EU.
+        // Let's assume standard JS getDay() (0=Sun)
+        return new Date(year, month, 1).getDay();
+    };
 
-    // Padding for empty start cells
-    const emptyDays = Array(firstDayOfMonth).fill(null);
+    const daysInMonth = getDaysInMonth(currentMonth.getFullYear(), currentMonth.getMonth());
+    const firstDay = getFirstDayOfMonth(currentMonth.getFullYear(), currentMonth.getMonth());
+
+    // Array for empty slots before first day
+    const empties = Array.from({ length: firstDay }, (_, i) => i);
+    // Array for days
     const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
-    const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-
-    const handleDayClick = (day: number) => {
-        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        onSelect(newDate);
-        if (onClose) onClose();
+    const prevMonth = () => {
+        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
     };
 
     const nextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
     };
 
-    const prevMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+    const handleDayClick = (day: number) => {
+        const newDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+        onSelect(newDate);
     };
 
-    // Check if a day is selected
     const isSelected = (day: number) => {
-        if (!selectedDate) return false;
         return (
+            selectedDate &&
             selectedDate.getDate() === day &&
-            selectedDate.getMonth() === currentDate.getMonth() &&
-            selectedDate.getFullYear() === currentDate.getFullYear()
+            selectedDate.getMonth() === currentMonth.getMonth() &&
+            selectedDate.getFullYear() === currentMonth.getFullYear()
         );
     };
 
     return (
-        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-2xl w-[320px] font-sans animate-fade-in z-50">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-                <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors">
+        <div className="bg-white p-6 rounded-3xl shadow-2xl border border-neutral-100 w-full max-w-[420px]">
+            <div className="flex justify-between items-center mb-8">
+                <button onClick={prevMonth} className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-neutral-100 transition-colors text-neutral-800 border border-neutral-200 hover:border-black">
                     &larr;
                 </button>
-                <span className="font-serif text-lg font-bold">
-                    {months[currentDate.getMonth()]} {currentDate.getFullYear()}
-                </span>
-                <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-100 transition-colors">
+                <h3 className="font-serif text-2xl font-medium">
+                    {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </h3>
+                <button onClick={nextMonth} className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-neutral-100 transition-colors text-neutral-800 border border-neutral-200 hover:border-black">
                     &rarr;
                 </button>
             </div>
 
-            {/* Days Header */}
-            <div className="grid grid-cols-7 mb-2 text-center text-xs font-bold uppercase text-neutral-400 tracking-wider">
-                <span>S</span>
-                <span>M</span>
-                <span>T</span>
-                <span>W</span>
-                <span>T</span>
-                <span>F</span>
-                <span>S</span>
+            <div className="grid grid-cols-7 gap-3 mb-4 text-center">
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => (
+                    <div key={d} className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
+                        {d}
+                    </div>
+                ))}
             </div>
 
-            {/* Grid */}
-            <div className="grid grid-cols-7 gap-1 text-center">
-                {emptyDays.map((_, i) => (
+            <div className="grid grid-cols-7 gap-3">
+                {empties.map((_, i) => (
                     <div key={`empty-${i}`} />
                 ))}
                 {days.map((day) => (
                     <button
                         key={day}
-                        onClick={(e) => { e.preventDefault(); handleDayClick(day); }}
+                        onClick={() => handleDayClick(day)}
                         className={`
-              w-9 h-9 flex items-center justify-center rounded-full text-sm font-medium transition-all
-              ${isSelected(day)
-                                ? "bg-black text-white hover:bg-neutral-800"
-                                : "hover:bg-neutral-100 text-neutral-700"
+                aspect-square flex items-center justify-center text-lg font-medium rounded-2xl transition-all duration-300
+                ${isSelected(day)
+                                ? "bg-black text-white shadow-xl scale-110"
+                                : "bg-white border border-neutral-100 text-neutral-600 hover:border-black/30 hover:bg-neutral-50 hover:scale-105"
                             }
             `}
                     >
                         {day}
                     </button>
                 ))}
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-neutral-100 flex justify-center">
+                <button onClick={onClose} className="text-xs text-neutral-400 hover:text-black uppercase tracking-widest font-bold px-4 py-2 hover:bg-neutral-100 rounded-lg transition-all">
+                    Close Calendar
+                </button>
             </div>
         </div>
     );

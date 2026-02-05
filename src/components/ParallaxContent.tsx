@@ -1,16 +1,16 @@
 "use client";
 
 import { useTransition } from "@/context/TransitionProvider";
+import { ReactNode } from "react";
 
-export default function ParallaxContent({ children }: { children: React.ReactNode }) {
-    const { transitionStage } = useTransition();
+export default function ParallaxContent({ children }: { children: ReactNode }) {
+    const { isTransitioning } = useTransition();
 
     return (
-        <div className={`
-      relative w-full h-full
-      ${transitionStage === 'exiting' ? 'animate-content-exit' : ''}
-      ${transitionStage === 'entering' ? 'animate-content-enter' : ''}
-    `}>
+        <div
+            className={`transition-all duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${isTransitioning ? "animate-content-exit" : "animate-content-enter"
+                }`}
+        >
             {children}
         </div>
     );
