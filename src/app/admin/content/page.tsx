@@ -13,7 +13,7 @@ const contentSchema = {
                 title: 'Hero Section',
                 fields: [
                     { key: 'home_badge', label: 'Badge', type: 'text', placeholder: 'New Opening 2026' },
-                    { key: 'home_title', label: 'Title', type: 'textarea', placeholder: 'Critically acclaimed cuisine.' },
+                    { key: 'home_title', label: 'Title', type: 'textarea', placeholder: 'Hora de comer' },
                     { key: 'home_subtitle', label: 'Subtitle', type: 'textarea', placeholder: 'Don\'t just take our word for it...' },
                 ]
             },
@@ -29,6 +29,12 @@ const contentSchema = {
                 fields: [
                     { key: 'home_quote', label: 'Quote', type: 'text', placeholder: '"The best dining experience..."' },
                     { key: 'home_quote_author', label: 'Author', type: 'text', placeholder: 'The Food Guide' },
+                ]
+            },
+            {
+                title: 'Images',
+                fields: [
+                    { key: 'home_hero_image', label: 'Hero Image URL', type: 'image', placeholder: 'https://images.unsplash.com/...' },
                 ]
             },
             {
@@ -61,11 +67,14 @@ const contentSchema = {
                 title: 'Chef Section',
                 fields: [
                     { key: 'about_chef_name', label: 'Chef Name', type: 'text', placeholder: 'Chef Adrian Garcia' },
+                    { key: 'about_chef_signature', label: 'Signature Image URL', type: 'image', placeholder: 'https://...' },
                 ]
             },
             {
-                title: 'Image Quote',
+                title: 'Images',
                 fields: [
+                    { key: 'about_image_main', label: 'Main Image URL', type: 'image', placeholder: 'https://images.unsplash.com/...' },
+                    { key: 'about_image_secondary', label: 'Secondary Image URL', type: 'image', placeholder: 'https://images.unsplash.com/...' },
                     { key: 'about_image_quote', label: 'Quote on Image', type: 'text', placeholder: '"Every dish tells a story..."' },
                 ]
             },
@@ -85,12 +94,21 @@ const contentSchema = {
                 fields: [
                     { key: 'menu_badge', label: 'Badge', type: 'text', placeholder: 'Seasonal Menu • Winter 2026' },
                     { key: 'menu_title', label: 'Title', type: 'text', placeholder: 'The Menu' },
+                    { key: 'menu_hero_image', label: 'Hero Image URL', type: 'image', placeholder: 'https://images.unsplash.com/...' },
                 ]
             },
             {
                 title: 'Introduction',
                 fields: [
                     { key: 'menu_intro', label: 'Intro Quote', type: 'textarea', placeholder: '"Our menu changes daily..."' },
+                ]
+            },
+            {
+                title: 'Section Images',
+                fields: [
+                    { key: 'menu_image_starters', label: 'Starters Section Image', type: 'image', placeholder: 'https://...' },
+                    { key: 'menu_image_mains', label: 'Mains Section Image', type: 'image', placeholder: 'https://...' },
+                    { key: 'menu_image_desserts', label: 'Desserts Section Image', type: 'image', placeholder: 'https://...' },
                 ]
             },
             {
@@ -109,6 +127,23 @@ const contentSchema = {
                 title: 'Brand',
                 fields: [
                     { key: 'global_brand_name', label: 'Brand Name', type: 'text', placeholder: 'KEKO.' },
+                    { key: 'global_logo', label: 'Logo URL (optional)', type: 'image', placeholder: 'https://...' },
+                ]
+            },
+            {
+                title: 'Navbar - Page Names',
+                fields: [
+                    { key: 'nav_about_text', label: 'About Page Name', type: 'text', placeholder: 'About' },
+                    { key: 'nav_menu_text', label: 'Menu Page Name', type: 'text', placeholder: 'Menu' },
+                    { key: 'nav_bookings_text', label: 'Bookings Page Name', type: 'text', placeholder: 'Bookings' },
+                ]
+            },
+            {
+                title: 'Navbar - Links',
+                fields: [
+                    { key: 'nav_about_link', label: 'About Link', type: 'text', placeholder: '/about' },
+                    { key: 'nav_menu_link', label: 'Menu Link', type: 'text', placeholder: '/menu' },
+                    { key: 'nav_bookings_link', label: 'Bookings Link', type: 'text', placeholder: '/reservations' },
                 ]
             },
             {
@@ -203,7 +238,7 @@ export default function AdminContentPage() {
 
             <main className="max-w-4xl mx-auto p-6">
                 <h1 className="text-3xl font-serif mb-2">Editar Contenido</h1>
-                <p className="text-neutral-500 mb-8">Modifica los textos de cada página de la web.</p>
+                <p className="text-neutral-500 mb-8">Modifica los textos e imágenes de cada página.</p>
 
                 {/* Tabs */}
                 <div className="flex gap-2 mb-8 border-b border-neutral-200 pb-4">
@@ -212,8 +247,8 @@ export default function AdminContentPage() {
                             key={key}
                             onClick={() => setActiveTab(key)}
                             className={`px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wider transition-colors ${activeTab === key
-                                    ? 'bg-black text-white'
-                                    : 'bg-white border border-neutral-200 hover:border-black/30'
+                                ? 'bg-black text-white'
+                                : 'bg-white border border-neutral-200 hover:border-black/30'
                                 }`}
                         >
                             {page.label}
@@ -226,8 +261,11 @@ export default function AdminContentPage() {
                     {contentSchema[activeTab].sections.map((section, sectionIndex) => (
                         <div key={sectionIndex} className="bg-white rounded-2xl border border-neutral-100 p-6">
                             <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                <span className="w-2 h-2 bg-black rounded-full"></span>
+                                <span className={`w-2 h-2 rounded-full ${section.title.includes('Image') ? 'bg-blue-500' : 'bg-black'}`}></span>
                                 {section.title}
+                                {section.title.includes('Image') && (
+                                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium ml-2">📷</span>
+                                )}
                             </h2>
                             <div className="space-y-4">
                                 {section.fields.map((field) => (
@@ -243,6 +281,28 @@ export default function AdminContentPage() {
                                                 rows={3}
                                                 className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm resize-none focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors"
                                             />
+                                        ) : field.type === 'image' ? (
+                                            <div className="space-y-2">
+                                                <input
+                                                    type="url"
+                                                    value={content[field.key] || ''}
+                                                    onChange={(e) => handleChange(field.key, e.target.value)}
+                                                    placeholder={field.placeholder}
+                                                    className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors"
+                                                />
+                                                {content[field.key] && (
+                                                    <div className="relative w-32 h-20 rounded-lg overflow-hidden bg-neutral-100 border border-neutral-200">
+                                                        <img
+                                                            src={content[field.key]}
+                                                            alt="Preview"
+                                                            className="w-full h-full object-cover"
+                                                            onError={(e) => {
+                                                                (e.target as HTMLImageElement).style.display = 'none';
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
                                         ) : (
                                             <input
                                                 type="text"

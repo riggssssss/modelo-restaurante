@@ -1,7 +1,8 @@
 "use client";
 
 import TransitionLink from "./TransitionLink";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getSiteContent, getContent, SiteContentMap } from "@/lib/content";
 
 interface MobileMenuProps {
     isOpen: boolean;
@@ -9,6 +10,14 @@ interface MobileMenuProps {
 }
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+    const [content, setContent] = useState<SiteContentMap>({});
+
+    useEffect(() => {
+        getSiteContent().then(setContent);
+    }, []);
+
+    const c = (key: string, fallback: string) => getContent(content, key, fallback);
+
     // Lock body scroll when menu is open
     useEffect(() => {
         if (isOpen) {
@@ -43,30 +52,30 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                         Home
                     </TransitionLink>
                     <TransitionLink
-                        href="/about"
+                        href={c('nav_about_link', '/about')}
                         className="hover:italic transition-all"
                         onClick={onClose}
                     >
-                        About
+                        {c('nav_about_text', 'About')}
                     </TransitionLink>
                     <TransitionLink
-                        href="/menu"
+                        href={c('nav_menu_link', '/menu')}
                         className="hover:italic transition-all"
                         onClick={onClose}
                     >
-                        Menu
+                        {c('nav_menu_text', 'Menu')}
                     </TransitionLink>
                     <TransitionLink
-                        href="/reservations"
+                        href={c('nav_bookings_link', '/reservations')}
                         className="hover:italic transition-all"
                         onClick={onClose}
                     >
-                        Bookings
+                        {c('nav_bookings_text', 'Bookings')}
                     </TransitionLink>
                 </nav>
 
                 <div className="text-center text-xs uppercase tracking-widest opacity-50 pb-8">
-                    Based in Madrid
+                    {c('about_footer', 'Based in Madrid')}
                 </div>
             </div>
         </div>

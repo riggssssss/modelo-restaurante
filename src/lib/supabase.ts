@@ -31,3 +31,10 @@ export interface Review {
     rating: number;
     created_at: string;
 }
+
+export interface MenuCategory {
+    id: string;
+    name: string;
+    sort_order: number;
+    image_url?: string;
+}

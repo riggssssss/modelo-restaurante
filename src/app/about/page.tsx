@@ -29,9 +29,9 @@ export default function AboutPage() {
                             {c('global_brand_name', 'KEKO.')}
                         </TransitionLink>
                         <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
-                            <TransitionLink href="/about" className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">About</TransitionLink>
-                            <TransitionLink href="/menu" className="hover:opacity-100">Menu</TransitionLink>
-                            <TransitionLink href="/reservations" className="hover:opacity-100">Bookings</TransitionLink>
+                            <TransitionLink href={c('nav_about_link', '/about')} className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">{c('nav_about_text', 'About')}</TransitionLink>
+                            <TransitionLink href={c('nav_menu_link', '/menu')} className="hover:opacity-100">{c('nav_menu_text', 'Menu')}</TransitionLink>
+                            <TransitionLink href={c('nav_bookings_link', '/reservations')} className="hover:opacity-100">{c('nav_bookings_text', 'Bookings')}</TransitionLink>
                         </nav>
                         <div className="md:hidden">
                             <button
@@ -70,7 +70,11 @@ export default function AboutPage() {
                         </div>
 
                         <div className="mt-12">
-                            <img src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2800&auto=format&fit=crop" alt="Signature" className="h-16 opacity-60" />
+                            <img
+                                src={c('about_chef_signature', 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2800&auto=format&fit=crop')}
+                                alt="Signature"
+                                className="h-16 opacity-60"
+                            />
                             <p className="text-sm font-bold uppercase tracking-widest mt-4">
                                 {c('about_chef_name', 'Chef Adrian Garcia')}
                             </p>
@@ -87,13 +91,19 @@ export default function AboutPage() {
                 <div className="flex flex-col gap-6 order-1 md:order-2 h-full">
                     <div className="relative flex-grow min-h-[40vh] rounded-[2rem] overflow-hidden">
                         <div className="absolute inset-0 bg-neutral-300">
-                            <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+                            <div
+                                className="w-full h-full bg-cover bg-center"
+                                style={{ backgroundImage: `url('${c('about_image_main', 'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=2070&auto=format&fit=crop')}')` }}
+                            ></div>
                         </div>
                     </div>
 
                     <div className="relative h-64 md:h-80 rounded-[2rem] overflow-hidden group">
                         <div className="absolute inset-0 bg-neutral-800">
-                            <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974&auto=format&fit=crop')] bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity duration-700"></div>
+                            <div
+                                className="w-full h-full bg-cover bg-center opacity-80 group-hover:opacity-100 transition-opacity duration-700"
+                                style={{ backgroundImage: `url('${c('about_image_secondary', 'https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974&auto=format&fit=crop')}')` }}
+                            ></div>
                         </div>
                         <div className="absolute bottom-6 left-6 text-white max-w-[200px]">
                             <p className="font-serif italic text-lg leading-tight">&quot;{c('about_image_quote', 'Every dish tells a story of its origin.')}&quot;</p>

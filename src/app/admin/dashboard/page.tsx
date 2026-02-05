@@ -41,41 +41,20 @@ export default function AdminDashboardPage() {
                     ))}
                 </div>
 
-                <div className="mt-12 bg-amber-50 border border-amber-200 rounded-2xl p-6">
-                    <h2 className="font-bold text-amber-800 mb-2">⚠️ Setup Required</h2>
-                    <p className="text-amber-700 text-sm mb-4">
-                        To use this CMS, you need to create tables in your Supabase database. Run this SQL in your Supabase dashboard:
+                <div className="mt-12 bg-green-50 border border-green-200 rounded-2xl p-6">
+                    <h2 className="font-bold text-green-800 mb-2">✅ Database Connected</h2>
+                    <p className="text-green-700 text-sm">
+                        Your Supabase tables are configured and ready to use. You can now manage all your website content from this admin panel.
                     </p>
-                    <pre className="bg-white p-4 rounded-lg text-xs overflow-x-auto border border-amber-200">
-                        {`-- Site Content
-CREATE TABLE site_content (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  key TEXT UNIQUE NOT NULL,
-  value JSONB NOT NULL,
-  updated_at TIMESTAMPTZ DEFAULT now()
-);
+                </div>
 
--- Menu Items
-CREATE TABLE menu_items (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL,
-  description TEXT,
-  price DECIMAL(10,2),
-  image_url TEXT,
-  category TEXT,
-  sort_order INT DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT now()
-);
-
--- Reviews
-CREATE TABLE reviews (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  author TEXT NOT NULL,
-  text TEXT NOT NULL,
-  rating INT CHECK (rating >= 1 AND rating <= 5),
-  created_at TIMESTAMPTZ DEFAULT now()
-);`}
-                    </pre>
+                <div className="mt-6 bg-white border border-neutral-200 rounded-2xl p-6">
+                    <h2 className="font-bold mb-4">📋 Quick Tips</h2>
+                    <ul className="text-sm text-neutral-600 space-y-2">
+                        <li>• <strong>Site Content</strong>: Edit all text and images on public pages</li>
+                        <li>• <strong>Menu Items</strong>: Create categories first, then add dishes to each</li>
+                        <li>• <strong>Reviews</strong>: Add customer testimonials to display on the site</li>
+                    </ul>
                 </div>
             </main>
         </div>

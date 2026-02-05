@@ -30,9 +30,9 @@ export default function Home() {
               {c('global_brand_name', 'KEKO.')}
             </TransitionLink>
             <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
-              <TransitionLink href="/about" className="hover:opacity-100">About</TransitionLink>
-              <TransitionLink href="/menu" className="hover:opacity-100">Menu</TransitionLink>
-              <TransitionLink href="/reservations" className="hover:opacity-100">Bookings</TransitionLink>
+              <TransitionLink href={c('nav_about_link', '/about')} className="hover:opacity-100">{c('nav_about_text', 'About')}</TransitionLink>
+              <TransitionLink href={c('nav_menu_link', '/menu')} className="hover:opacity-100">{c('nav_menu_text', 'Menu')}</TransitionLink>
+              <TransitionLink href={c('nav_bookings_link', '/reservations')} className="hover:opacity-100">{c('nav_bookings_text', 'Bookings')}</TransitionLink>
             </nav>
             <div className="md:hidden">
               <button
@@ -52,11 +52,10 @@ export default function Home() {
               {c('home_badge', 'New Opening 2026')}
             </div>
 
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif leading-[0.9] tracking-tight">
-              {c('home_title', 'Critically acclaimed cuisine.').split(' ').map((word, i, arr) => (
-                <span key={i}>
-                  {i === 1 ? <span className="italic">{word}</span> : word}
-                  {i < arr.length - 1 && (i === 0 || i === 1 ? <br /> : ' ')}
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif leading-[1] tracking-tight flex flex-wrap gap-x-5">
+              {c('home_title', 'Hora de comer').split(' ').map((word, i) => (
+                <span key={i} className={i === 1 ? 'italic' : ''}>
+                  {word}
                 </span>
               ))}
             </h1>
