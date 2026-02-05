@@ -45,9 +45,9 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
     return (
         <div className="w-full">
             <div className="mb-8">
-                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                <div className="flex flex-wrap justify-between items-baseline gap-y-2">
                     <h2 className="text-4xl md:text-5xl font-serif leading-tight">Select a date</h2>
-                    <h3 className="text-4xl md:text-5xl font-serif italic leading-tight">
+                    <h3 className="text-4xl md:text-5xl font-serif italic leading-tight text-right">
                         {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                     </h3>
                 </div>
