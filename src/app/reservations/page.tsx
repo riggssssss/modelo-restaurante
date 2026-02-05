@@ -37,7 +37,7 @@ export default function ReservationsPage() {
     };
 
     return (
-        <main className="min-h-screen p-4 md:p-8 flex items-center justify-center font-sans">
+        <main className="min-h-screen p-4 md:p-8 flex flex-col font-sans">
             <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
 
             <div className="w-full max-w-[1600px] bg-transparent grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 h-[calc(100vh-4rem)] min-h-[750px]">
