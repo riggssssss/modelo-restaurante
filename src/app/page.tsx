@@ -17,7 +17,7 @@ export default async function Home() {
       <div className="w-full max-w-[1600px] bg-transparent grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 h-[calc(100vh-4rem)] min-h-[600px]">
 
         {/* LEFT COLUMN: Content & Typography */}
-        <div className="relative flex flex-col justify-between p-6 md:p-12 rounded-[2rem] bg-[#F8F5EE]">
+        <div className="relative flex flex-col justify-between p-6 md:p-12 rounded-[2rem] bg-background">
           {/* Interactive Header Component */}
           <HomeHeader content={content} />
 
@@ -25,7 +25,7 @@ export default async function Home() {
           <div className="mt-12 mb-auto space-y-8">
             {/* Badge */}
             {!hidden('home_badge') && (
-              <div className="inline-block bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-4">
+              <div className="inline-block bg-accent px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-4">
                 {c('home_badge', 'Apertura 2026')}
               </div>
             )}
@@ -48,12 +48,12 @@ export default async function Home() {
 
             <div className="flex flex-wrap gap-4 pt-4">
               {!hidden('home_cta_1') && (
-                <TransitionLink href="/reservations" className="px-8 py-4 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all text-center">
+                <TransitionLink href="/reservations" className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium hover:opacity-90 transition-all text-center">
                   {c('home_cta_1', 'Reservar Mesa')}
                 </TransitionLink>
               )}
               {!hidden('home_cta_2') && (
-                <TransitionLink href="/menu" className="px-8 py-4 border border-black rounded-full font-medium hover:bg-black/5 transition-all text-center">
+                <TransitionLink href="/menu" className="px-8 py-4 border border-primary text-primary rounded-full font-medium hover:bg-black/5 transition-all text-center">
                   {c('home_cta_2', 'Ver Carta')}
                 </TransitionLink>
               )}

@@ -51,8 +51,8 @@ export default function HomeHeader({ content }: HomeHeaderProps) {
             onClick={() => setIsMobileMenuOpen(true)}
             className="space-y-1.5 cursor-pointer p-2"
           >
-            <div className="w-6 h-0.5 bg-black"></div>
-            <div className="w-6 h-0.5 bg-black"></div>
+            <div className="w-6 h-0.5 bg-foreground"></div>
+            <div className="w-6 h-0.5 bg-foreground"></div>
           </button>
         </div>
       </header>

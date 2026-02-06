@@ -16,7 +16,8 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
     };
 
     const getFirstDayOfMonth = (year: number, month: number) => {
-        return new Date(year, month, 1).getDay();
+        const day = new Date(year, month, 1).getDay();
+        return day === 0 ? 6 : day - 1; // 0 = Monday, 6 = Sunday
     };
 
     const daysInMonth = getDaysInMonth(currentMonth.getFullYear(), currentMonth.getMonth());
@@ -45,11 +46,11 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
     return (
         <div className="w-full">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
-                <h2 className="text-4xl md:text-5xl font-serif leading-none shrink-0">Select a date</h2>
+                <h2 className="text-4xl md:text-5xl font-serif leading-none shrink-0">Elige un día</h2>
 
                 <div className="flex items-center gap-4 self-start md:self-auto">
-                    <h3 className="text-4xl md:text-5xl font-serif italic leading-none text-left whitespace-nowrap">
-                        {currentMonth.toLocaleDateString('en-US', { month: 'long' })}
+                    <h3 className="text-4xl md:text-5xl font-serif italic leading-none text-left whitespace-nowrap capitalize">
+                        {currentMonth.toLocaleDateString('es-ES', { month: 'long' })}
                         <span className="text-2xl md:text-3xl not-italic ml-2 opacity-60 font-sans tracking-tight">{currentMonth.getFullYear()}</span>
                     </h3>
                     <div className="flex gap-1 shrink-0">
@@ -64,7 +65,7 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
             </div>
 
             <div className="grid grid-cols-7 gap-2 mb-2 text-center">
-                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+                {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((d, i) => (
                     <div key={i} className="text-sm font-bold text-neutral-400 uppercase tracking-widest pb-3">
                         {d}
                     </div>
@@ -75,21 +76,32 @@ export default function Calendar({ selectedDate, onSelect }: Omit<CalendarProps,
                 {empties.map((_, i) => (
                     <div key={`empty-${i}`} />
                 ))}
-                {days.map((day) => (
-                    <button
-                        key={day}
-                        onClick={() => handleDayClick(day)}
-                        className={`
-                aspect-square flex items-center justify-center text-lg md:text-xl font-medium rounded-2xl transition-all duration-300
-                ${isSelected(day)
-                                ? "bg-black text-white shadow-lg scale-105"
-                                : "bg-transparent md:bg-white border-none md:border md:border-neutral-100 text-neutral-600 md:hover:border-black/20 md:hover:bg-neutral-50"
-                            }
-            `}
-                    >
-                        {day}
-                    </button>
-                ))}
+                {days.map((day) => {
+                    const dateToCheck = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const isPast = dateToCheck < today;
+
+                    return (
+                        <button
+                            key={day}
+                            disabled={isPast}
+                            onClick={() => handleDayClick(day)}
+                            className={`
+                                aspect-square flex items-center justify-center text-lg md:text-xl font-medium rounded-2xl transition-all duration-300
+                                ${isPast ? "text-neutral-300 cursor-not-allowed bg-transparent" : ""}
+                                ${!isPast && isSelected(day)
+                                    ? "bg-black text-white shadow-lg scale-105"
+                                    : !isPast
+                                        ? "bg-transparent md:bg-white border-none md:border md:border-neutral-100 text-neutral-600 md:hover:border-black/20 md:hover:bg-neutral-50"
+                                        : ""
+                                }
+                            `}
+                        >
+                            {day}
+                        </button>
+                    );
+                })}
             </div>
         </div>
     );

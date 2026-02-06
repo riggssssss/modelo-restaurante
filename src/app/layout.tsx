@@ -19,13 +19,21 @@ export const metadata: Metadata = {
   description: "A meeting place for food lovers in Madrid.",
 };
 
-export default function RootLayout({
+import { getSiteContent } from "@/lib/content";
+import ThemeInjector from "@/components/ThemeInjector";
+
+// ... existing imports
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const content = await getSiteContent();
+
   return (
     <html lang="es">
+      <ThemeInjector content={content} />
       <body
         className={`${inter.variable} ${geistMono.variable} antialiased font-sans`}
       >

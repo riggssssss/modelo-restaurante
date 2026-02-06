@@ -4,13 +4,34 @@ import { useState, useEffect } from "react";
 import TransitionLink from "@/components/TransitionLink";
 import MobileMenu from "@/components/MobileMenu";
 import { getSiteContent, getContent, SiteContentMap } from "@/lib/content";
-import { supabase, MenuItem, MenuCategory } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
+
+// Types based on new schema
+type Category = {
+    id: string;
+    name: string;
+    description: string | null;
+    image_url: string | null;
+    sort_order: number;
+};
+
+type MenuItem = {
+    id: string;
+    category_id: string;
+    name: string;
+    description: string | null;
+    price: string | null;
+    sort_order: number;
+    is_available: boolean;
+};
 
 export default function MenuPage() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [content, setContent] = useState<SiteContentMap>({});
-    const [categories, setCategories] = useState<MenuCategory[]>([]);
-    const [items, setItems] = useState<MenuItem[]>([]);
+
+    // Data state
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [itemsByCategory, setItemsByCategory] = useState<Record<string, MenuItem[]>>({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -19,30 +40,44 @@ export default function MenuPage() {
     }, []);
 
     const fetchMenuData = async () => {
-        const { data: catData } = await supabase
-            .from('menu_categories')
-            .select('*')
-            .order('sort_order', { ascending: true });
+        try {
+            // Fetch categories
+            const { data: catData } = await supabase
+                .from('menu_categories')
+                .select('*')
+                .order('sort_order', { ascending: true });
 
-        const { data: itemData } = await supabase
-            .from('menu_items')
-            .select('*')
-            .order('sort_order', { ascending: true });
+            if (!catData) return;
+            setCategories(catData);
 
-        setCategories(catData || []);
-        setItems(itemData || []);
-        setLoading(false);
+            // Fetch all available items
+            const { data: itemData } = await supabase
+                .from('menu_items')
+                .select('*')
+                .eq('is_available', true)
+                .order('sort_order', { ascending: true });
+
+            if (itemData) {
+                // Group by category_id
+                const grouped = itemData.reduce((acc, item) => {
+                    if (!acc[item.category_id]) acc[item.category_id] = [];
+                    acc[item.category_id].push(item);
+                    return acc;
+                }, {} as Record<string, MenuItem[]>);
+                setItemsByCategory(grouped);
+            }
+        } catch (error) {
+            console.error("Error fetching menu:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const c = (key: string, fallback: string) => getContent(content, key, fallback);
 
-    // Group items by category
-    const groupedItems = categories.map(cat => ({
-        category: cat,
-        items: items.filter(item => item.category === cat.name)
-    })).filter(group => group.items.length > 0);
-
-    const hasDbItems = items.length > 0;
+    // Filter categories that have at least one item
+    const activeCategories = categories.filter(cat => (itemsByCategory[cat.id]?.length || 0) > 0);
+    const hasDbItems = activeCategories.length > 0;
 
     // Fallback static menu for when database is empty
     const staticMenu = [
@@ -130,40 +165,48 @@ export default function MenuPage() {
                     <section className="space-y-32">
                         {/* Dynamic menu from database */}
                         {hasDbItems ? (
-                            groupedItems.map(({ category, items: catItems }, groupIndex) => (
-                                <div key={category.id} className={`grid md:grid-cols-[${groupIndex % 2 === 0 ? '1fr_300px' : '300px_1fr'}] gap-12 items-start`}>
-                                    <div className={groupIndex % 2 === 1 ? 'order-1 md:order-2' : ''}>
-                                        <h2 className="text-4xl font-serif mb-12 flex items-center gap-4">
-                                            {groupIndex % 2 === 1 && <span className="h-px bg-black/10 flex-grow"></span>}
-                                            {category.name}
-                                            {groupIndex % 2 === 0 && <span className="h-px bg-black/10 flex-grow"></span>}
-                                        </h2>
-                                        <div className="space-y-12">
-                                            {catItems.map((item) => (
-                                                <div key={item.id} className="group relative pl-4 border-l-2 border-transparent hover:border-[#EAB308] transition-all cursor-default">
-                                                    <div className="flex justify-between items-baseline mb-2">
-                                                        <h3 className="text-2xl font-bold">{item.name}</h3>
-                                                        {item.price && <span className="text-xl font-mono text-neutral-400">{item.price}</span>}
+                            activeCategories.map((category, groupIndex) => {
+                                const catItems = itemsByCategory[category.id] || [];
+                                return (
+                                    <div key={category.id} className={`grid md:grid-cols-[${groupIndex % 2 === 0 ? '1fr_300px' : '300px_1fr'}] gap-12 items-start`}>
+                                        <div className={groupIndex % 2 === 1 ? 'order-1 md:order-2' : ''}>
+                                            <h2 className="text-4xl font-serif mb-4 flex items-center gap-4">
+                                                {groupIndex % 2 === 1 && <span className="h-px bg-black/10 flex-grow"></span>}
+                                                {category.name}
+                                                {groupIndex % 2 === 0 && <span className="h-px bg-black/10 flex-grow"></span>}
+                                            </h2>
+                                            {category.description && (
+                                                <p className="text-neutral-500 italic mb-8 max-w-md">{category.description}</p>
+                                            )}
+
+                                            <div className="space-y-12">
+                                                {catItems.map((item) => (
+                                                    <div key={item.id} className="group relative pl-4 border-l-2 border-transparent hover:border-[#EAB308] transition-all cursor-default">
+                                                        <div className="flex justify-between items-baseline mb-2">
+                                                            <h3 className="text-2xl font-bold">{item.name}</h3>
+                                                            {item.price && <span className="text-xl font-mono text-neutral-400">{item.price}</span>}
+                                                        </div>
+                                                        <p className="text-neutral-500">{item.description}</p>
                                                     </div>
-                                                    <p className="text-neutral-500">{item.description}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                    {/* Optional Image for Category if available */}
-                                    {(category as any).image_url && (
-                                        <div className={`${groupIndex % 2 === 1 ? 'order-2 md:order-1' : ''} sticky top-24`}>
-                                            <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-200">
-                                                <img
-                                                    src={(category as any).image_url}
-                                                    alt={category.name as string}
-                                                    className="w-full h-full object-cover"
-                                                />
+                                                ))}
                                             </div>
                                         </div>
-                                    )}
-                                </div>
-                            ))
+
+                                        {/* Optional Image for Category if available */}
+                                        {category.image_url && (
+                                            <div className={`${groupIndex % 2 === 1 ? 'order-2 md:order-1' : ''} sticky top-24`}>
+                                                <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-200">
+                                                    <img
+                                                        src={category.image_url}
+                                                        alt={category.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })
                         ) : (
                             /* Static fallback menu */
                             staticMenu.map((section, sectionIndex) => (
