@@ -6,14 +6,12 @@ import Calendar from "@/components/Calendar";
 import TransitionLink from "@/components/TransitionLink";
 import MobileMenu from "@/components/MobileMenu";
 
-
 export default function ReservationsPage() {
     const [step, setStep] = useState(1);
     const [partySize, setPartySize] = useState<number | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string>("");
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
 
     // Form Data
     const [formData, setFormData] = useState({
@@ -81,7 +79,7 @@ export default function ReservationsPage() {
                                     className="w-full"
                                 >
 
-                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">How many guests?</h2>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">¿Cuántos comensales?</h2>
 
                                     <div className="grid grid-cols-4 md:grid-cols-6 gap-3 mb-8">
                                         {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
@@ -101,7 +99,7 @@ export default function ReservationsPage() {
                                             onClick={nextStep}
                                             className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95"
                                         >
-                                            Next &rarr;
+                                            Siguiente &rarr;
                                         </button>
                                     </div>
                                 </motion.div>
@@ -118,6 +116,7 @@ export default function ReservationsPage() {
                                     transition={{ duration: 0.4, ease: "easeOut" }}
                                     className="w-full"
                                 >
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8 text-center">Elige un día</h2>
                                     <div className="mb-8 flex justify-center">
                                         <Calendar
                                             onSelect={(date) => setSelectedDate(date)}
@@ -126,13 +125,13 @@ export default function ReservationsPage() {
                                     </div>
 
                                     <div className="flex justify-between items-center">
-                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Go Back</button>
+                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Volver</button>
                                         <button
                                             disabled={!selectedDate}
                                             onClick={nextStep}
                                             className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95"
                                         >
-                                            Next &rarr;
+                                            Siguiente &rarr;
                                         </button>
                                     </div>
                                 </motion.div>
@@ -150,10 +149,10 @@ export default function ReservationsPage() {
                                     className="w-full"
                                 >
 
-                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Pick a time</h2>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Elige una hora</h2>
 
                                     <div className="grid grid-cols-3 md:grid-cols-4 gap-3 mb-8">
-                                        {["19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30"].map((time) => (
+                                        {["13:00", "13:30", "14:00", "14:30", "15:00", "20:00", "20:30", "21:00", "21:30", "22:00"].map((time) => (
                                             <button
                                                 key={time}
                                                 onClick={() => setSelectedTime(time)}
@@ -165,13 +164,13 @@ export default function ReservationsPage() {
                                     </div>
 
                                     <div className="flex justify-between items-center">
-                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Go Back</button>
+                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Volver</button>
                                         <button
                                             disabled={!selectedTime}
                                             onClick={nextStep}
                                             className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95"
                                         >
-                                            Next &rarr;
+                                            Siguiente &rarr;
                                         </button>
                                     </div>
                                 </motion.div>
@@ -189,26 +188,26 @@ export default function ReservationsPage() {
                                     className="w-full"
                                 >
 
-                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Complete your booking</h2>
+                                    <h2 className="text-4xl md:text-5xl font-serif leading-tight mb-8">Completa tu reserva</h2>
 
                                     <div className="space-y-6 mb-8">
                                         <input
                                             type="text"
-                                            placeholder="Full Name"
+                                            placeholder="Nombre Completo"
                                             className="w-full bg-transparent border-b border-neutral-200 py-4 text-xl placeholder:text-neutral-300 focus:outline-none focus:border-black transition-all"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                         />
                                         <input
                                             type="email"
-                                            placeholder="Email Address"
+                                            placeholder="Correo Electrónico"
                                             className="w-full bg-transparent border-b border-neutral-200 py-4 text-xl placeholder:text-neutral-300 focus:outline-none focus:border-black transition-all"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         />
                                         <input
                                             type="tel"
-                                            placeholder="Phone Number"
+                                            placeholder="Teléfono"
                                             className="w-full bg-transparent border-b border-neutral-200 py-4 text-xl placeholder:text-neutral-300 focus:outline-none focus:border-black transition-all"
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -216,19 +215,19 @@ export default function ReservationsPage() {
                                     </div>
 
                                     <div className="bg-[#F2EFE5] p-6 rounded-2xl mb-8 border border-black/5">
-                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Summary</p>
+                                        <p className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Resumen</p>
                                         <div className="flex justify-between items-baseline mb-1">
-                                            <span className="text-lg font-medium">{selectedDate?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} at {selectedTime}</span>
-                                            <span className="text-sm text-neutral-500">{partySize} Guests</span>
+                                            <span className="text-lg font-medium">{selectedDate?.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })} a las {selectedTime}</span>
+                                            <span className="text-sm text-neutral-500">{partySize} Personas</span>
                                         </div>
                                     </div>
 
                                     <div className="flex justify-between items-center">
-                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Go Back</button>
+                                        <button onClick={prevStep} className="text-sm font-bold uppercase tracking-wider text-neutral-400 hover:text-black transition-colors">Volver</button>
                                         <button
                                             className="px-8 py-4 bg-black text-white rounded-full font-bold uppercase tracking-widest shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
                                         >
-                                            Confirm Booking
+                                            Confirmar Reserva
                                         </button>
                                     </div>
                                 </motion.div>
@@ -239,7 +238,7 @@ export default function ReservationsPage() {
 
                     {/* Footer */}
                     <div className="mt-8 text-xs text-neutral-400 uppercase tracking-widest z-20">
-                        Based in Madrid &mdash; Est. 2026
+                        Madrid &mdash; Est. 2026
                     </div>
                 </div>
 
@@ -271,12 +270,12 @@ export default function ReservationsPage() {
                                 transition={{ duration: 0.5 }}
                             >
                                 <p className="text-sm font-medium">
-                                    {step === 1 && "\"The perfect evening starts with the right company.\""}
-                                    {step === 2 && "\"We are ready when you are.\""}
-                                    {step === 3 && "\"Time is the only luxury.\""}
-                                    {step === 4 && "\"Just one step away from an unforgettable night.\""}
+                                    {step === 1 && "\"La velada perfecta empieza con la compañía adecuada.\""}
+                                    {step === 2 && "\"Estamos listos cuando tú lo estés.\""}
+                                    {step === 3 && "\"El tiempo es el único lujo verdadero.\""}
+                                    {step === 4 && "\"A un paso de una noche inolvidable.\""}
                                 </p>
-                                <div className="mt-2 text-xs opacity-70">&mdash; Keko Experience</div>
+                                <div className="mt-2 text-xs opacity-70">&mdash; Experiencia Keko</div>
                             </motion.div>
                         </AnimatePresence>
                     </div>

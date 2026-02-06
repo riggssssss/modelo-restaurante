@@ -49,33 +49,33 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                         className="hover:italic transition-all"
                         onClick={onClose}
                     >
-                        Home
+                        Inicio
                     </TransitionLink>
                     <TransitionLink
-                        href={c('nav_about_link', '/about')}
+                        href="/about"
                         className="hover:italic transition-all"
                         onClick={onClose}
                     >
-                        {c('nav_about_text', 'About')}
+                        Nosotros
                     </TransitionLink>
                     <TransitionLink
-                        href={c('nav_menu_link', '/menu')}
+                        href="/menu"
                         className="hover:italic transition-all"
                         onClick={onClose}
                     >
-                        {c('nav_menu_text', 'Menu')}
+                        Carta
                     </TransitionLink>
                     <TransitionLink
-                        href={c('nav_bookings_link', '/reservations')}
+                        href="/reservations"
                         className="hover:italic transition-all"
                         onClick={onClose}
                     >
-                        {c('nav_bookings_text', 'Bookings')}
+                        Reservas
                     </TransitionLink>
                 </nav>
 
                 <div className="text-center text-xs uppercase tracking-widest opacity-50 pb-8">
-                    {c('about_footer', 'Based in Madrid')}
+                    Madrid — Est. 2026
                 </div>
             </div>
         </div>

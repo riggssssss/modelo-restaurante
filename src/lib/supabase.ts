@@ -1,9 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Helper to get credentials from environment or localStorage
+const getSupabaseCredentials = () => {
+    // Default to env vars
+    let url = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    let key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    // If client-side, check for overrides
+    if (typeof window !== 'undefined') {
+        const storedUrl = localStorage.getItem('supabase_url');
+        const storedKey = localStorage.getItem('supabase_key');
+        if (storedUrl) url = storedUrl;
+        if (storedKey) key = storedKey;
+    }
+
+    return { url, key };
+};
+
+const { url, key } = getSupabaseCredentials();
+
+export const supabase = createClient(url, key);
 
 // Type definitions for our tables
 export interface SiteContent {

@@ -26,11 +26,11 @@ export default function AdminLoginPage() {
                 className="w-full max-w-sm"
             >
                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-neutral-100">
-                    <h1 className="text-2xl font-serif font-medium text-center mb-8 text-neutral-900">Admin Access</h1>
+                    <h1 className="text-2xl font-serif font-medium text-center mb-8 text-neutral-900">Acceso Admin</h1>
 
                     <form action={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1.5 font-medium">Username</label>
+                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1.5 font-medium">Usuario</label>
                             <input
                                 type="text"
                                 name="username"
@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
                         </div>
 
                         <div>
-                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1.5 font-medium">Password</label>
+                            <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-1.5 font-medium">Contraseña</label>
                             <input
                                 type="password"
                                 name="password"
@@ -60,13 +60,13 @@ export default function AdminLoginPage() {
                             disabled={isPending}
                             className="w-full bg-black text-white py-3 rounded-lg text-sm font-bold uppercase tracking-wider hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all mt-4"
                         >
-                            {isPending ? 'Verifying...' : 'Login'}
+                            {isPending ? 'Verificando...' : 'Entrar'}
                         </button>
                     </form>
                 </div>
 
                 <p className="text-center text-xs text-neutral-400 mt-8 uppercase tracking-widest">
-                    Keko Private Area
+                    Área Privada Keko
                 </p>
             </motion.div>
         </main>

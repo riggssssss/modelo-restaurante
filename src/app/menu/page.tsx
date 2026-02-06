@@ -42,34 +42,33 @@ export default function MenuPage() {
         items: items.filter(item => item.category === cat.name)
     })).filter(group => group.items.length > 0);
 
-    // Check if we have any items from database
     const hasDbItems = items.length > 0;
 
     // Fallback static menu for when database is empty
     const staticMenu = [
         {
-            title: "Starters",
+            title: "Entrantes",
             items: [
-                { name: "Burrata & Heritage Tomato", price: "18", desc: "Basil oil, pine nuts, balsamic glaze" },
-                { name: "Scallop Carpaccio", price: "24", desc: "Yuzu dressing, radish, coriander cress" },
-                { name: "Beef Tartare", price: "22", desc: "Smoked egg yolk, capers, sourdough crisp" }
+                { name: "Burrata y Tomate Heritage", price: "18", desc: "Aceite de albahaca, piñones, glaseado balsámico" },
+                { name: "Carpaccio de Vieira", price: "24", desc: "Aderezo de yuzu, rábano, brotes de cilantro" },
+                { name: "Steak Tartar", price: "22", desc: "Encurtidos, mostaza antigua, crujiente de masa madre" }
             ]
         },
         {
-            title: "Mains",
+            title: "Principales",
             items: [
-                { name: "Wild Mushroom Risotto", price: "28", desc: "Truffle oil, parmesan crisp, thyme" },
-                { name: "Pan-Seared Seabass", price: "34", desc: "Cauliflower purée, samphire, lemon butter" },
-                { name: "Iberico Pork Presa", price: "38", desc: "Apple chutney, cider jus, charred leeks" },
-                { name: "Roast Duck Breast", price: "36", desc: "Blackberry jus, celeriac fondant, kale" }
+                { name: "Risotto de Setas Silvestres", price: "28", desc: "Aceite de trufa, crujiente de parmesano, tomillo" },
+                { name: "Lubina a la Plancha", price: "34", desc: "Puré de coliflor, salicornia, mantequilla de limón" },
+                { name: "Presa Ibérica", price: "38", desc: "Chutney de manzana, jugo de sidra, puerros a la brasa" },
+                { name: "Magret de Pato", price: "36", desc: "Salsa de moras, fondant de apio, kale" }
             ]
         },
         {
-            title: "Desserts",
+            title: "Postres",
             items: [
-                { name: "Dark Chocolate Tart", price: "12", desc: "Sea salt, crème fraîche, honeycomb" },
-                { name: "Basque Burnt Cheesecake", price: "14", desc: "Fig jam, walnut crumble" },
-                { name: "Poached Pear", price: "12", desc: "Saffron syrup, vanilla bean ice cream" }
+                { name: "Tarta de Chocolate Negro", price: "12", desc: "Sal marina, crème fraîche" },
+                { name: "Tarta de Queso", price: "14", desc: "Estilo vasco, mermelada de higos" },
+                { name: "Pera al Vino", price: "12", desc: "Almíbar de azafrán, helado de vainilla" }
             ]
         }
     ];
@@ -93,9 +92,9 @@ export default function MenuPage() {
                         {c('global_brand_name', 'KEKO.')}
                     </TransitionLink>
                     <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-90">
-                        <TransitionLink href={c('nav_about_link', '/about')} className="hover:opacity-100">{c('nav_about_text', 'About')}</TransitionLink>
-                        <TransitionLink href={c('nav_menu_link', '/menu')} className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">{c('nav_menu_text', 'Menu')}</TransitionLink>
-                        <TransitionLink href={c('nav_bookings_link', '/reservations')} className="hover:opacity-100">{c('nav_bookings_text', 'Bookings')}</TransitionLink>
+                        <TransitionLink href="/about" className="hover:opacity-100">Nosotros</TransitionLink>
+                        <TransitionLink href="/menu" className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">Carta</TransitionLink>
+                        <TransitionLink href="/reservations" className="hover:opacity-100">Reservas</TransitionLink>
                     </nav>
                     <div className="md:hidden">
                         <button
@@ -110,10 +109,10 @@ export default function MenuPage() {
 
                 <div className="relative z-10 text-center text-white p-4">
                     <span className="inline-block border border-white/30 bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-                        {c('menu_badge', 'Seasonal Menu • Winter 2026')}
+                        {c('menu_badge', 'Menú de Temporada • Invierno 2026')}
                     </span>
                     <h1 className="text-6xl md:text-9xl font-serif leading-none tracking-tight">
-                        {c('menu_title', 'The Menu')}
+                        {c('menu_title', 'La Carta')}
                     </h1>
                 </div>
             </div>
@@ -122,7 +121,7 @@ export default function MenuPage() {
 
                 {/* Intro */}
                 <p className="max-w-xl mx-auto text-xl text-center text-neutral-600 mb-24 font-serif italic">
-                    {c('menu_intro', '"Our menu changes daily based on what the earth provides. We work closely with local farmers to bring the best of Madrid to your plate."')}
+                    {c('menu_intro', '"Nuestro menú cambia diariamente según lo que nos ofrece la tierra. Trabajamos estrechamente con agricultores locales para llevar lo mejor de Madrid a tu plato."')}
                 </p>
 
                 {loading ? (
@@ -151,6 +150,18 @@ export default function MenuPage() {
                                             ))}
                                         </div>
                                     </div>
+                                    {/* Optional Image for Category if available */}
+                                    {(category as any).image_url && (
+                                        <div className={`${groupIndex % 2 === 1 ? 'order-2 md:order-1' : ''} sticky top-24`}>
+                                            <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-200">
+                                                <img
+                                                    src={(category as any).image_url}
+                                                    alt={category.name as string}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))
                         ) : (
@@ -162,7 +173,7 @@ export default function MenuPage() {
                                             <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-200">
                                                 <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1546241072-48010ad2862c?q=80&w=1974&auto=format&fit=crop')] bg-cover bg-center"></div>
                                             </div>
-                                            <p className="text-xs text-center mt-3 text-neutral-400 uppercase tracking-widest">Locally Sourced</p>
+                                            <p className="text-xs text-center mt-3 text-neutral-400 uppercase tracking-widest">Producto Local</p>
                                         </div>
                                     )}
 
@@ -191,7 +202,7 @@ export default function MenuPage() {
                                                 <div className={`w-full h-full bg-[url('https://images.unsplash.com/photo-${sectionIndex === 0 ? '1626804475297-411db7044238' : '1511914678378-2906b1f69dcf'}?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center`}></div>
                                             </div>
                                             <p className="text-xs text-center mt-3 text-neutral-400 uppercase tracking-widest">
-                                                {sectionIndex === 0 ? 'Plated by Chef Garcia' : 'Sweet Ending'}
+                                                {sectionIndex === 0 ? 'Emplatado por Chef Garcia' : 'Dulce Final'}
                                             </p>
                                         </div>
                                     )}
@@ -202,9 +213,9 @@ export default function MenuPage() {
                 )}
 
                 <div className="mt-32 text-center pb-20 border-t border-black/5 pt-20">
-                    <h3 className="text-3xl font-serif mb-8">{c('menu_cta_title', 'Ready to taste?')}</h3>
+                    <h3 className="text-3xl font-serif mb-8">{c('menu_cta_title', '¿Listo para probar?')}</h3>
                     <TransitionLink href="/reservations" className="px-10 py-5 bg-black text-white rounded-full font-medium hover:bg-neutral-800 transition-all inline-block shadow-xl hover:shadow-2xl hover:-translate-y-1">
-                        {c('menu_cta_button', 'Book a Table')}
+                        {c('menu_cta_button', 'Reservar Mesa')}
                     </TransitionLink>
                 </div>
             </div>

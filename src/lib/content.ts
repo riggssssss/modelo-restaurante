@@ -1,14 +1,13 @@
 import { supabase } from './supabase';
 
-export type SiteContentMap = Record<string, string>;
+export type SiteContentMap = Record<string, any>;
 
-// Cache for content - avoids refetching on every page load
+// Cache for content
 let contentCache: SiteContentMap | null = null;
 let cacheTime: number = 0;
 const CACHE_DURATION = 60 * 1000; // 1 minute
 
 export async function getSiteContent(): Promise<SiteContentMap> {
-    // Return cache if fresh
     if (contentCache && Date.now() - cacheTime < CACHE_DURATION) {
         return contentCache;
     }
@@ -23,23 +22,43 @@ export async function getSiteContent(): Promise<SiteContentMap> {
     }
 
     const contentMap: SiteContentMap = {};
-    data?.forEach((item: { key: string; value: { text?: string } }) => {
-        contentMap[item.key] = item.value?.text || '';
+    data?.forEach((item) => {
+        contentMap[item.key] = item.value || {};
     });
 
-    // Update cache
     contentCache = contentMap;
     cacheTime = Date.now();
 
     return contentMap;
 }
 
-// Helper to get a single value with fallback
-export function getContent(content: SiteContentMap, key: string, fallback: string): string {
-    return content[key] || fallback;
+// Helper to get localized content
+// logic: try locale -> try 'es' (default) -> try 'text' (legacy) -> fallback
+export function getContent(content: SiteContentMap, key: string, fallback: string, locale: string = 'es'): string {
+    const item = content[key];
+    if (!item) return fallback;
+
+    // 1. Try specific locale
+    if (item[locale]) return item[locale];
+
+    // 2. Try 'es' as default language
+    if (item['es']) return item['es'];
+
+    // 3. Try legacy 'text' field (migration support)
+    if (item['text']) return item['text'];
+
+    // 4. Try any first key if it looks like a string (desperation)
+    // const values = Object.values(item);
+    // if (values.length > 0 && typeof values[0] === 'string') return values[0] as string;
+
+    return fallback;
 }
 
-// Clear cache (call after saving in admin)
+export function isContentHidden(content: SiteContentMap, key: string): boolean {
+    const item = content[key];
+    return item?.hidden === true;
+}
+
 export function clearContentCache() {
     contentCache = null;
     cacheTime = 0;

@@ -29,9 +29,9 @@ export default function AboutPage() {
                             {c('global_brand_name', 'KEKO.')}
                         </TransitionLink>
                         <nav className="hidden md:flex gap-6 text-sm font-medium uppercase tracking-wider opacity-70">
-                            <TransitionLink href={c('nav_about_link', '/about')} className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">{c('nav_about_text', 'About')}</TransitionLink>
-                            <TransitionLink href={c('nav_menu_link', '/menu')} className="hover:opacity-100">{c('nav_menu_text', 'Menu')}</TransitionLink>
-                            <TransitionLink href={c('nav_bookings_link', '/reservations')} className="hover:opacity-100">{c('nav_bookings_text', 'Bookings')}</TransitionLink>
+                            <TransitionLink href="/about" className="hover:opacity-100 opacity-100 underline decoration-2 underline-offset-4">Nosotros</TransitionLink>
+                            <TransitionLink href="/menu" className="hover:opacity-100">Carta</TransitionLink>
+                            <TransitionLink href="/reservations" className="hover:opacity-100">Reservas</TransitionLink>
                         </nav>
                         <div className="md:hidden">
                             <button
@@ -47,32 +47,27 @@ export default function AboutPage() {
                     {/* Main Content */}
                     <div className="flex-grow flex flex-col justify-center">
                         <div className="inline-block w-fit bg-[#EEDD4A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-black mb-4">
-                            {c('about_badge', 'Our Story')}
+                            {c('about_badge', 'Nuestra Historia')}
                         </div>
                         <h1 className="text-5xl md:text-7xl font-serif leading-tight mb-10">
-                            {c('about_title', 'Born from a love of tradition & innovation.').split('tradition').map((part, i) => (
-                                <span key={i}>
-                                    {part}
-                                    {i === 0 && <span className="italic">tradition</span>}
-                                </span>
-                            ))}
+                            {c('about_title', 'Nacido del amor por la tradición y la innovación.')}
                         </h1>
                         <div className="space-y-6 text-lg text-neutral-600 leading-relaxed max-w-lg">
                             <p>
-                                {c('about_p1', 'Keko started as a dream in a small kitchen in Madrid. We wanted to create a space that felt like home, yet surprised you with every bite.')}
+                                {c('about_p1', 'Keko empezó como un sueño en una pequeña cocina de Madrid. Queríamos crear un espacio que se sintiera como en casa, pero que te sorprendiera con cada bocado.')}
                             </p>
                             <p>
-                                {c('about_p2', 'Our philosophy is simple: source the best ingredients, treat them with respect, and serve them with warmth. We believe that dining is not just about sustenance, but about connection.')}
+                                {c('about_p2', 'Nuestra filosofía es simple: obtener los mejores ingredientes, tratarlos con respeto y servirlos con calidez. Creemos que comer no es solo alimentarse, sino conectar.')}
                             </p>
                             <p>
-                                {c('about_p3', 'Whether you are here for a quick lunch or a celebratory dinner, we promise an experience that lingers in your memory long after the last bite.')}
+                                {c('about_p3', 'Ya vengas para un almuerzo rápido o una cena de celebración, prometemos una experiencia que perdurará en tu memoria mucho después del último bocado.')}
                             </p>
                         </div>
 
                         <div className="mt-12">
                             <img
                                 src={c('about_chef_signature', 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=2800&auto=format&fit=crop')}
-                                alt="Signature"
+                                alt="Firma"
                                 className="h-16 opacity-60"
                             />
                             <p className="text-sm font-bold uppercase tracking-widest mt-4">
@@ -83,7 +78,7 @@ export default function AboutPage() {
 
                     {/* Footer */}
                     <div className="mt-8 text-xs text-neutral-400 uppercase tracking-widest">
-                        {c('about_footer', 'Based in Madrid — Est. 2026')}
+                        {c('about_footer', 'Madrid — Est. 2026')}
                     </div>
                 </div>
 
@@ -106,7 +101,7 @@ export default function AboutPage() {
                             ></div>
                         </div>
                         <div className="absolute bottom-6 left-6 text-white max-w-[200px]">
-                            <p className="font-serif italic text-lg leading-tight">&quot;{c('about_image_quote', 'Every dish tells a story of its origin.')}&quot;</p>
+                            <p className="font-serif italic text-lg leading-tight">&quot;{c('about_image_quote', 'Cada plato cuenta una historia de su origen.')}&quot;</p>
                         </div>
                     </div>
                 </div>
