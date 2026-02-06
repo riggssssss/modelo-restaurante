@@ -25,69 +25,117 @@ export async function submitReservation(prevState: any, formData: FormData): Pro
         return { success: false, message: 'Todos los campos son obligatorios.' };
     }
 
-    // Check Availability Logic
-    const requestedDate = new Date(`${date}T${time}`);
+    // 0. Fetch System Settings
+    const { data: contentData } = await supabase
+        .from('site_content')
+        .select('*')
+        .in('key', ['res_mode', 'res_max_capacity', 'res_auto_confirm']);
 
-    // Define duration (e.g., 2 hours)
-    const DURATION_MS = 2 * 60 * 60 * 1000;
+    const settings: Record<string, string> = {};
+    contentData?.forEach(item => {
+        if (item.value && typeof item.value === 'object' && item.value.text) {
+            settings[item.key] = item.value.text;
+        }
+    });
+
+    const mode = settings['res_mode'] || 'tables'; // Default to tables
+    const maxCapacity = parseInt(settings['res_max_capacity'] || '50');
+    const autoConfirm = settings['res_auto_confirm'] === 'true';
+
+    // Global Validation: Reject parties larger than feasible?
+    // In tables mode, this is handled by "no table fits".
+    // In capacity mode, we might just check if partySize > maxCapacity (unlikely but possible).
+
+    const requestedDate = new Date(`${date}T${time}`);
+    const DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours
     const requestedEnd = new Date(requestedDate.getTime() + DURATION_MS);
 
-    // 1. Get all active tables that fit the party size
-    const { data: eligibleTables, error: tablesError } = await supabase
-        .from('restaurant_tables')
-        .select('id, capacity')
-        .eq('is_active', true)
-        .gte('capacity', partySize)
-        .order('capacity', { ascending: true }); // Try smallest fit first
+    let assignedTableId = null;
+    let reservationStatus = 'pending';
 
-    if (tablesError || !eligibleTables || eligibleTables.length === 0) {
-        // If no tables defined, fallback to allowing reservation (legacy behavior) or block?
-        // Let's block if tables exist but none fit. If table inventory is empty, maybe allow?
-        // Safety: If no tables in DB, we assume "No Availability" or "Open System"? 
-        // User asked for "manual tables", so we presume they will add them.
+    if (mode === 'tables') {
+        // --- TABLE MANAGEMENT MODE ---
 
-        // If NO tables exist at all, we might warn used.
-        // For now, let's assume if no tables fit, we return error.
-        return { success: false, message: 'Lo sentimos, no hay mesas disponibles para ese número de personas.' };
-    }
+        // 1. Get all active tables that fit the party size
+        const { data: eligibleTables, error: tablesError } = await supabase
+            .from('restaurant_tables')
+            .select('id, capacity')
+            .eq('is_active', true)
+            .gte('capacity', partySize)
+            .order('capacity', { ascending: true });
 
-    // 2. Check reservations that overlap with this time slot
-    // Overlap: (StartA < EndB) and (EndA > StartB)
-    const { data: conflictingReservations, error: conflictError } = await supabase
-        .from('reservations')
-        .select('table_id, date, time')
-        .eq('date', date) // Optimization: only check same day
-        .neq('status', 'cancelled')
-        .not('table_id', 'is', null);
+        if (tablesError || !eligibleTables || eligibleTables.length === 0) {
+            return { success: false, message: 'Lo sentimos, no tenemos mesas con capacidad para ese número de personas.' };
+        }
 
-    if (conflictError) {
-        console.error('Availability check error:', conflictError);
-        return { success: false, message: 'Error al verificar disponibilidad.' };
-    }
+        // 2. Check reservations that overlap
+        const { data: conflictingReservations, error: conflictError } = await supabase
+            .from('reservations')
+            .select('table_id, date, time')
+            .eq('date', date)
+            .neq('status', 'cancelled')
+            .not('table_id', 'is', null);
 
-    // Filter conflicts by time overlap
-    // Note: We need to know the duration of existing reservations. Assuming 2 hours for all for simplicity now.
-    const busyTableIds = new Set<string>();
+        if (conflictError) {
+            return { success: false, message: 'Error al verificar disponibilidad.' };
+        }
 
-    if (conflictingReservations) {
-        for (const res of conflictingReservations) {
-            const resStart = new Date(`${res.date}T${res.time}`);
-            const resEnd = new Date(resStart.getTime() + DURATION_MS);
+        const busyTableIds = new Set<string>();
+        if (conflictingReservations) {
+            for (const res of conflictingReservations) {
+                const resStart = new Date(`${res.date}T${res.time}`);
+                const resEnd = new Date(resStart.getTime() + DURATION_MS);
 
-            if (requestedDate < resEnd && requestedEnd > resStart) {
-                if (res.table_id) busyTableIds.add(res.table_id);
+                if (requestedDate < resEnd && requestedEnd > resStart) {
+                    if (res.table_id) busyTableIds.add(res.table_id);
+                }
             }
+        }
+
+        // 3. Find first available table
+        const availableTable = eligibleTables.find(t => !busyTableIds.has(t.id));
+
+        if (!availableTable) {
+            return { success: false, message: 'Lo sentimos, no hay mesas disponibles a esa hora.' };
+        }
+
+        assignedTableId = availableTable.id;
+
+    } else {
+        // --- TOTAL CAPACITY MODE ---
+
+        // 1. Calculate current covers for this slot
+        const { data: activeReservations, error: capacityError } = await supabase
+            .from('reservations')
+            .select('party_size, date, time')
+            .eq('date', date)
+            .neq('status', 'cancelled');
+
+        if (capacityError) {
+            return { success: false, message: 'Error al verificar aforo.' };
+        }
+
+        let currentCovers = 0;
+        if (activeReservations) {
+            for (const res of activeReservations) {
+                const resStart = new Date(`${res.date}T${res.time}`);
+                const resEnd = new Date(resStart.getTime() + DURATION_MS);
+
+                if (requestedDate < resEnd && requestedEnd > resStart) {
+                    currentCovers += res.party_size;
+                }
+            }
+        }
+
+        if (currentCovers + partySize > maxCapacity) {
+            return { success: false, message: 'Lo sentimos, no hay aforo disponible para esa hora.' };
         }
     }
 
-    // 3. Find first available table
-    const availableTable = eligibleTables.find(t => !busyTableIds.has(t.id));
+    // Determine Status
+    reservationStatus = autoConfirm ? 'confirmed' : 'pending';
 
-    if (!availableTable) {
-        return { success: false, message: 'Lo sentimos, no hay mesas disponibles a esa hora.' };
-    }
-
-    // Insert into DB with assigned table_id
+    // Insert into DB
     const { error } = await supabase.from('reservations').insert({
         date,
         time,
@@ -95,8 +143,8 @@ export async function submitReservation(prevState: any, formData: FormData): Pro
         name,
         email,
         phone,
-        status: 'confirmed',
-        table_id: availableTable.id
+        status: reservationStatus,
+        table_id: assignedTableId
     });
 
     if (error) {
@@ -105,6 +153,10 @@ export async function submitReservation(prevState: any, formData: FormData): Pro
     }
 
     revalidatePath('/admin/bookings');
+
+    if (reservationStatus === 'pending') {
+        return { success: true, message: 'Solicitud recibida. Recibirás una confirmación pronto.' };
+    }
     return { success: true, message: '¡Reserva confirmada correctamente!' };
 }
 
