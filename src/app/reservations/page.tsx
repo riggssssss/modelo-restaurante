@@ -29,7 +29,14 @@ export default function ReservationsPage() {
 
         try {
             const data = new FormData();
-            data.append('date', selectedDate?.toISOString() || '');
+            // Fix timezone issue: Send date as YYYY-MM-DD string in LOCAL time, not UTC ISO
+            // Create a date string that represents the selected day in the user's timezone
+            const year = selectedDate?.getFullYear();
+            const month = String((selectedDate?.getMonth() || 0) + 1).padStart(2, '0');
+            const day = String(selectedDate?.getDate()).padStart(2, '0');
+            const dateString = `${year}-${month}-${day}`;
+
+            data.append('date', dateString || '');
             data.append('time', selectedTime);
             data.append('partySize', partySize?.toString() || '');
             data.append('name', formData.name);
@@ -66,16 +73,26 @@ export default function ReservationsPage() {
     });
     const [singleImageMode, setSingleImageMode] = useState(false);
 
-    // Fetch settings
+    // Fetch settings and constraints
     useEffect(() => {
         const fetchSettings = async () => {
             const content = await getSiteContent();
 
-            // Limits
-            const min = parseInt(getContent(content, 'res_min_diners', '1'));
-            const max = parseInt(getContent(content, 'res_max_diners', '8'));
-            if (!isNaN(min)) setMinDiners(min);
-            if (!isNaN(max)) setMaxDiners(max);
+            // Get Constraints from Server Action
+            const { getReservationConstraints } = await import("@/actions/reservations");
+            const constraints = await getReservationConstraints();
+
+            // Limits (prefer constraints from server action over content file if available)
+            if (constraints) {
+                setMinDiners(constraints.minDiners);
+                setMaxDiners(constraints.maxDiners);
+            } else {
+                // Fallback
+                const min = parseInt(getContent(content, 'res_min_diners', '1'));
+                const max = parseInt(getContent(content, 'res_max_diners', '8'));
+                if (!isNaN(min)) setMinDiners(min);
+                if (!isNaN(max)) setMaxDiners(max);
+            }
 
             // Hours
             setLunchStart(getContent(content, 'res_lunch_start', '13:00'));

@@ -46,6 +46,12 @@ export async function submitReservation(prevState: any, formData: FormData): Pro
     // In tables mode, this is handled by "no table fits".
     // In capacity mode, we might just check if partySize > maxCapacity (unlikely but possible).
 
+    // Global Validation: Reject parties larger than feasible?
+    // In tables mode, this is handled by "no table fits".
+    // In capacity mode, we might just check if partySize > maxCapacity (unlikely but possible).
+
+    // Create a date object that corresponds to the given date string and time string in LOCAL context
+    // This assumes the inputs are 'YYYY-MM-DD' and 'HH:mm'
     const requestedDate = new Date(`${date}T${time}`);
     const DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours
     const requestedEnd = new Date(requestedDate.getTime() + DURATION_MS);
@@ -162,7 +168,6 @@ export async function submitReservation(prevState: any, formData: FormData): Pro
 
 export async function getReservations(startDate: string, endDate: string) {
     // supabase is already initialized
-
     // Sort by date (descending) and then time (descending) so newest are first
     const { data, error } = await supabase
         .from('reservations')
@@ -177,6 +182,57 @@ export async function getReservations(startDate: string, endDate: string) {
         return [];
     }
     return data;
+}
+
+// New helper to getting constraints for the frontend UI
+export async function getReservationConstraints() {
+    // 0. Fetch System Settings
+    const { data: contentData } = await supabase
+        .from('site_content')
+        .select('*')
+        .in('key', ['res_mode', 'res_max_capacity', 'res_min_diners', 'res_max_diners']);
+
+    const settings: Record<string, string> = {};
+    contentData?.forEach(item => {
+        if (item.value && typeof item.value === 'object' && item.value.text) {
+            settings[item.key] = item.value.text;
+        }
+    });
+
+    const mode = settings['res_mode'] || 'tables';
+    const minDiners = parseInt(settings['res_min_diners'] || '1');
+    let maxDiners = parseInt(settings['res_max_diners'] || '10');
+
+    if (mode === 'tables') {
+        // Find the absolute largest table capacity
+        const { data: maxTable } = await supabase
+            .from('restaurant_tables')
+            .select('capacity')
+            .eq('is_active', true)
+            .order('capacity', { ascending: false })
+            .limit(1)
+            .single();
+
+        if (maxTable) {
+            // Constraint: Can't book for more than the largest table (unless we combine, but keeping simple)
+            maxDiners = maxTable.capacity;
+        } else {
+            // No tables?
+            maxDiners = 0;
+        }
+    } else {
+        // In capacity mode, we might allow large groups up to total capacity?
+        // Or keep respecting 'res_max_diners' as the "max group size".
+        // Let's stick to res_max_diners setting but upper bound by res_max_capacity if valid.
+        const absMax = parseInt(settings['res_max_capacity'] || '50');
+        if (maxDiners > absMax) maxDiners = absMax;
+    }
+
+    return {
+        mode,
+        minDiners,
+        maxDiners
+    };
 }
 
 export async function getRecentReservations(limit: number = 5) {
